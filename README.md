@@ -46,4 +46,4 @@ See contribute.md file in the root directory if you want to submit an issue or a
 
 
 ## License
-Apache License 2.0 (refer to document [license] (/LICENSE))
+Apache License 2.0
