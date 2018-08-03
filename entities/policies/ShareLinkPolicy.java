@@ -31,14 +31,14 @@ public enum ShareLinkPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ShareLinkPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ShareLinkPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ShareLinkPolicy(int value) {
+	ShareLinkPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

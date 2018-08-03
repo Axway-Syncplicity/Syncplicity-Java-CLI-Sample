@@ -26,14 +26,14 @@ public enum PasscodeEnforcementPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (PasscodeEnforcementPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, PasscodeEnforcementPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private PasscodeEnforcementPolicy(int value) {
+	PasscodeEnforcementPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

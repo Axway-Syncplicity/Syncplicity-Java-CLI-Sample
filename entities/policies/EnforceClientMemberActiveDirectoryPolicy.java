@@ -32,14 +32,14 @@ public enum EnforceClientMemberActiveDirectoryPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (EnforceClientMemberActiveDirectoryPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, EnforceClientMemberActiveDirectoryPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private EnforceClientMemberActiveDirectoryPolicy(int value) {
+	EnforceClientMemberActiveDirectoryPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

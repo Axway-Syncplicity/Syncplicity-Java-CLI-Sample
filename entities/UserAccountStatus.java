@@ -27,14 +27,14 @@ public enum UserAccountStatus implements Serializable {
 		if (mappings == null) {
 			synchronized (UserAccountStatus.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, UserAccountStatus>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private UserAccountStatus(int value) {
+	UserAccountStatus(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

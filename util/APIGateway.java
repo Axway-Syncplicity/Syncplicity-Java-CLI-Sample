@@ -24,7 +24,7 @@ public abstract class APIGateway {
 	private final static String ACCEPT_HEADER = "Accept";
 	private final static String JSON_CONTENT_TYPE = "application/json";
 
-	protected static String provisioningAPIUrlPrefix = "";
+	protected static String provisioningAPIUrlPrefix;
 
 	static {
 		provisioningAPIUrlPrefix = ConfigurationHelper.getBaseApiEndpointUrl() + "provisioning/";
@@ -54,7 +54,7 @@ public abstract class APIGateway {
 		request.setDoOutput(true);
 		request.setDoInput(true);
 
-		return applyCosumerCredentials(request, isAuthenticationCall );
+		return applyConsumerCredentials(request, isAuthenticationCall );
 	}
 
 	/**
@@ -81,14 +81,11 @@ public abstract class APIGateway {
 		
 		System.out.println( "[Body] " + body);
 
-		try {
-			OutputStream requestStream = request.getOutputStream();
-			
-			requestStream.write(body.getBytes(Charset.forName("UTF-8")));
-			requestStream.flush();
-			requestStream.close();
-		}
-		finally { }
+		OutputStream requestStream = request.getOutputStream();
+
+		requestStream.write(body.getBytes(Charset.forName("UTF-8")));
+		requestStream.flush();
+		requestStream.close();
 	}
 
 	/**
@@ -98,7 +95,7 @@ public abstract class APIGateway {
 	 * 
 	 * @return The current request.
 	 */
-	private static HttpURLConnection applyCosumerCredentials( HttpURLConnection request, boolean isAuthenticationCall ) {
+	private static HttpURLConnection applyConsumerCredentials(HttpURLConnection request, boolean isAuthenticationCall ) {
 
 		//If this is the first OAuth authentication call, then we don't have an OAuth Bearer token (access token), so we will use the
 		//Application Key and Application Secret as the consumer credentials for the application.  However, once we've successfully
@@ -147,64 +144,58 @@ public abstract class APIGateway {
 				shouldRefreshToken.setResult(false);
 			}
 			
-			System.out.println("");
+			System.out.println();
 			System.out.println("Trying to read response...");
-			
-			try {
-				InputStream responseStream = request.getInputStream();
-				
-				if (responseStream == null) {
-					System.out.println("Response wasn't received.");
-					return null;
-				}
 
-				String response = null;
-				try {
-					BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
-					
-					String line;
-					StringBuffer responseBuffer = new StringBuffer();
-					while ((line = reader.readLine()) != null) {
-						responseBuffer.append(line);
-						responseBuffer.append('\r');
-					}
-					reader.close();
-					response = responseBuffer.toString();
-				}
-				finally { }
+			InputStream responseStream = request.getInputStream();
 
-				if( StringUtils.isEmpty(response) || StringUtils.isWhitespace(response) ) {
-					System.out.println("Received response is empty.");
-					return null;
-				}
-
-				//This is just to pretty-print the JSON response to the console, you do not
-				//need to do this of course for the real application that you would write.
-                try {
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                    JsonParser jp = new JsonParser();
-                    JsonElement je = jp.parse(response);
-                    String prettyJsonString = gson.toJson(je);
-                    prettyJsonString = prettyJsonString.replaceAll(" ", "  ");
-
-                    System.out.println("Response: \n" + prettyJsonString);
-
-                    if (!classType.isAssignableFrom(String.class)) {
-                        return JSONSerialization.deserizalize(response, classType);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Could not parse the reponse as JSON. Probably the response is of some other format.");
-                }
-
-				return (T) response;
+			if (responseStream == null) {
+				System.out.println("Response wasn't received.");
+				return null;
 			}
-			finally {}
-			
+
+			String response;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(responseStream));
+
+			String line;
+			StringBuilder responseBuffer = new StringBuilder();
+			while ((line = reader.readLine()) != null) {
+				responseBuffer.append(line);
+				responseBuffer.append('\r');
+			}
+			reader.close();
+			response = responseBuffer.toString();
+
+			if( StringUtils.isEmpty(response) || StringUtils.isWhitespace(response) ) {
+				System.out.println("Received response is empty.");
+				return null;
+			}
+
+			//This is just to pretty-print the JSON response to the console, you do not
+			//need to do this of course for the real application that you would write.
+			try {
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				JsonParser jp = new JsonParser();
+				JsonElement je = jp.parse(response);
+				String prettyJsonString = gson.toJson(je);
+				prettyJsonString = prettyJsonString.replaceAll(" ", "  ");
+
+				System.out.println("Response: \n" + prettyJsonString);
+
+				if (!classType.isAssignableFrom(String.class)) {
+					return JSONSerialization.deserizalize(response, classType);
+				}
+			} catch (Exception e) {
+				System.out.println("Could not parse the response as JSON. Probably the response is of some other format.");
+			}
+
+			return (T) response;
+
 		} 
 		catch (IOException e) {
 			
 			if( !suppressErrors ) {
-				System.err.println( "" );
+				System.err.println();
 				System.err.println(String.format("\tError occurs during request to %s.", request.getURL().toString()));
 				
 				try {
@@ -270,7 +261,7 @@ public abstract class APIGateway {
 
         if (shouldRefreshToken.getResult())
         {
-        	System.out.println("");
+        	System.out.println();
         	System.out.println("Trying to re-authenticate using the same credentials.");
 
             // it's needed to authorize again
@@ -328,7 +319,7 @@ public abstract class APIGateway {
         
         if (!isAuthenticationCall && shouldRefreshToken.getResult())
         {
-        	System.out.println("");
+        	System.out.println();
         	System.out.println("Trying to re-authenticate using the same credentials.");
 
             // it's needed to authorize again
@@ -345,7 +336,7 @@ public abstract class APIGateway {
             System.out.println("Authentication was successful. Trying to send POST request again for the last time.");
             
             try {
-            	request = createRequest(method, uri, isAuthenticationCall );
+            	request = createRequest(method, uri, false);
     			request.setRequestProperty("Content-Type", contentType );
 
     			writeBody(request, body, contentType);
@@ -406,7 +397,7 @@ public abstract class APIGateway {
         
         if (shouldRefreshToken.getResult())
         {
-        	System.out.println("");
+        	System.out.println();
         	System.out.println("Trying to re-authenticate using the same credentials.");
 
             // it's needed to authorize again
@@ -460,7 +451,6 @@ public abstract class APIGateway {
 	 * object of type classType.
 	 * 
 	 * @param uri The request url.
-	 * @param body The request body.
 	 * @param classType The type of returned object.
 	 * 
 	 * @return The object representation of received response or null if
@@ -481,7 +471,7 @@ public abstract class APIGateway {
         
         if (shouldRefreshToken.getResult())
         {
-        	System.out.println("");
+        	System.out.println();
         	System.out.println("Trying to re-authenticate using the same credentials.");
 
             // it's needed to authorize again

@@ -27,14 +27,14 @@ public enum ConcurrentUseNotificationPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ConcurrentUseNotificationPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ConcurrentUseNotificationPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ConcurrentUseNotificationPolicy(int value) {
+	ConcurrentUseNotificationPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

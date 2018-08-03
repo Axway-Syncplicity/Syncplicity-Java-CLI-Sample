@@ -26,14 +26,14 @@ public enum IncludeOwnerInFolderNamePolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (IncludeOwnerInFolderNamePolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, IncludeOwnerInFolderNamePolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private IncludeOwnerInFolderNamePolicy(int value) {
+	IncludeOwnerInFolderNamePolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

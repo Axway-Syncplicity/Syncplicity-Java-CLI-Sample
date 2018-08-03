@@ -13,14 +13,14 @@ public enum PasswordComplexityOptions implements Serializable {
 		if (mappings == null) {
 			synchronized (PasswordComplexityOptions.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, PasswordComplexityOptions>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private PasswordComplexityOptions(int value) {
+	PasswordComplexityOptions(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

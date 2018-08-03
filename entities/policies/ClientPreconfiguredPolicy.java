@@ -30,14 +30,14 @@ public enum ClientPreconfiguredPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ClientPreconfiguredPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ClientPreconfiguredPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ClientPreconfiguredPolicy(int value) {
+	ClientPreconfiguredPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

@@ -10,14 +10,14 @@ public enum FileBinaryDataBodyTag {
 		if (mappings == null) {
 			synchronized (FileBinaryDataBodyTag.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, FileBinaryDataBodyTag>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private FileBinaryDataBodyTag(int value) {
+	FileBinaryDataBodyTag(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

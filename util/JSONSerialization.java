@@ -17,7 +17,7 @@ import com.google.gson.GsonBuilder;
  *       this example covers what is needed for the few APIs invoked in 
  *       this application.
  */
-public class JSONSerialization {
+class JSONSerialization {
 	
 	/**
 	 * Serialize objects to JSON string.
@@ -26,7 +26,7 @@ public class JSONSerialization {
 	 * 
 	 * @return JSON string which represents object.
 	 */
-	public static <T> String serizalize(T entity) {
+	static <T> String serizalize(T entity) {
 		
 		if (entity != null) {
 			Gson gson = new GsonBuilder()
@@ -45,11 +45,11 @@ public class JSONSerialization {
 	 * De-serialize the input JSON string into the object.
 	 * 
 	 * @param serialized The input JSON string.
-	 * @param type  The type of object.
+	 * @param classType  The type of object.
 	 * 
 	 * @return The instance of object of type Class<T>.
 	 */
-	public static <T> T deserizalize(String serialized, Class<T> classType) {
+	static <T> T deserizalize(String serialized, Class<T> classType) {
 		
 		if( !StringUtils.isEmpty(serialized) && !StringUtils.isWhitespace(serialized) ) {
 			

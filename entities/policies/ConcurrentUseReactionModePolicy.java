@@ -24,14 +24,14 @@ public enum ConcurrentUseReactionModePolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ConcurrentUseReactionModePolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ConcurrentUseReactionModePolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ConcurrentUseReactionModePolicy(int value) {
+	ConcurrentUseReactionModePolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Mapping implements Serializable {
-	public int SyncPointId;
+	public long SyncPointId;
 
 	public String Path;
 

@@ -25,7 +25,6 @@ import util.ConfigurationHelper;
 
 /**
  * A service for retrieving File data.
- *
  */
 public class FileService extends APIGateway {
 
@@ -70,25 +69,11 @@ public class FileService extends APIGateway {
      *            the File ID
      * @param suppressErrors
      *            Indicates whether errors should be suppressed
-     * @return the File info
+     * @return the {@link File} info
      */
     public static File getFile(long syncPointId, String fileId, boolean suppressErrors) {
         return httpGet(String.format(fileUrl, syncPointId, fileId), File.class, suppressErrors);
     }
-
-    /**
-     * Downloads a file from Syncplicity.
-     * 
-     * @param syncPointId
-     *            the related SyncPoint ID
-     * @param fileId
-     *            the file ID
-     * @param suppressErrors
-     *            indicates whether the errors should be suppressed
-     * @return the downloaded file contents as string. Others may want to retrieve
-     *         the contents as InputStream, Resource or byte[]. In this case it's
-     *         just needed to translate to returned response differently.
-     */
 
     /**
      * Downloads a File.
@@ -121,7 +106,7 @@ public class FileService extends APIGateway {
      * 
      * @param storageEndpointId
      *            the Storage Endpoint ID
-     * @return the matching <code>StorageEndpoint</code> object
+     * @return the matching {@link StorageEndpoint} object
      */
     private static StorageEndpoint getStorageEndpoint(String storageEndpointId) {
         StorageEndpoint[] storageEndpoints = StorageEndpointService.getStorageEndpoints(true);
@@ -148,13 +133,13 @@ public class FileService extends APIGateway {
      *            the file data as byte array
      * @return the upload result as a string
      */
-    public static String uploadFile(String storageEndpointUrl, String filePath, String filename, int syncPointId,
+    public static String uploadFile(String storageEndpointUrl, String filePath, String filename, long syncPointId,
             byte[] data) {
         filePath += filename;
         try {
             filePath = URLEncoder.encode(filePath, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            System.err.println(String.format("Could not encode file path", filePath));
+            System.err.println(String.format("Could not encode file path '%s'", filePath));
         }
         String contentType = "multipart/form-data; boundary=" + BOUNDARY;
 
@@ -186,7 +171,7 @@ public class FileService extends APIGateway {
      * @return the multipart request body as a string
      */
     private static String createMultipartBody(String filename, byte[] data, String sha256, String sessionKey,
-            int syncPointId, String creationTimeUtc) {
+    		long syncPointId, String creationTimeUtc) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);
         try {

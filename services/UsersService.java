@@ -5,7 +5,6 @@ import entities.User;
 
 /**
  * Class for requests to users.svc, users_public.svc and user.svc
- *
  */
 public class UsersService 
 	extends APIGateway {

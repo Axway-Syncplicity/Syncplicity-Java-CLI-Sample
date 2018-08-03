@@ -3,7 +3,6 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum RssNewsFeedPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -24,14 +23,14 @@ public enum RssNewsFeedPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (RssNewsFeedPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, RssNewsFeedPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private RssNewsFeedPolicy(int value) {
+	RssNewsFeedPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

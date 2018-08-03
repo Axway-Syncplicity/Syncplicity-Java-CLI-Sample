@@ -8,7 +8,7 @@ public enum GrantType {
 	private final int grantType;
 	private final String responseType;
 	
-	private GrantType(final int grantType, String responseType ) {
+	GrantType(final int grantType, String responseType ) {
         this.grantType    = grantType;
         this.responseType = responseType;
     }

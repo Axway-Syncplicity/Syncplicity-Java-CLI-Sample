@@ -25,14 +25,14 @@ public enum FileExclusionPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (FileExclusionPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, FileExclusionPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private FileExclusionPolicy(int value) {
+	FileExclusionPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

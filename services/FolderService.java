@@ -6,7 +6,6 @@ import util.ConfigurationHelper;
 
 /**
  * A service for retrieving Folder data.
- *
  */
 public class FolderService extends APIGateway {
 
@@ -33,10 +32,10 @@ public class FolderService extends APIGateway {
      * @param folderId
      *            the parent Folder ID
      * @param folders
-     *            the <code>Folder</code> DTOs
+     *            the {@link Folder} DTOs
      * @return
      */
-    public static Folder[] createFolders(int syncPointId, String folderId, Folder[] folders) {
+    public static Folder[] createFolders(long syncPointId, long folderId, Folder[] folders) {
         return httpPost(String.format(foldersUrl, syncPointId, folderId), "application/json", folders);
     }
 
@@ -49,9 +48,9 @@ public class FolderService extends APIGateway {
      *            the Folder ID
      * @param suppressErrors
      *            indicates whether errors should be suppressed
-     * @return the matching <code>Folder</code> object
+     * @return the matching {@link Folder} object
      */
-    public static Folder getFolder(long syncPointId, String folderId, boolean suppressErrors) {
+    public static Folder getFolder(long syncPointId, long folderId, boolean suppressErrors) {
         return httpGet(String.format(folderUrl, syncPointId, folderId), Folder.class, suppressErrors);
     }
 
@@ -63,7 +62,7 @@ public class FolderService extends APIGateway {
      * @param folderId
      *            the Folder ID
      */
-    public static void deleteFolder(long syncPointId, String folderId) {
+    public static void deleteFolder(long syncPointId, long folderId) {
         httpDelete(String.format(folderUrl, syncPointId, folderId), Folder.class);
     }
 }

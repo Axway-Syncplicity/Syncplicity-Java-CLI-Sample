@@ -23,14 +23,14 @@ public enum StoragePasswordPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (StoragePasswordPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, StoragePasswordPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private StoragePasswordPolicy(int value) {
+	StoragePasswordPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

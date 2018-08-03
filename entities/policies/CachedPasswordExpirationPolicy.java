@@ -6,7 +6,6 @@ import java.io.Serializable;
  * Mobile change password expiration option
  */
 public enum CachedPasswordExpirationPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -35,14 +34,14 @@ public enum CachedPasswordExpirationPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (CachedPasswordExpirationPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, CachedPasswordExpirationPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private CachedPasswordExpirationPolicy(int value) {
+	CachedPasswordExpirationPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

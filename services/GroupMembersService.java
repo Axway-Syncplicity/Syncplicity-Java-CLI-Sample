@@ -6,7 +6,6 @@ import entities.User;
 
 /**
  * Class for requests to group_members.svc and group_member.svc
- *
  */
 public class GroupMembersService 
 	extends APIGateway {

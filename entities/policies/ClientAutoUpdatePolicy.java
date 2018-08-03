@@ -30,14 +30,14 @@ public enum ClientAutoUpdatePolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ClientAutoUpdatePolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ClientAutoUpdatePolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ClientAutoUpdatePolicy(int value) {
+	ClientAutoUpdatePolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

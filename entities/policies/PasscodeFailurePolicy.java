@@ -26,14 +26,14 @@ public enum PasscodeFailurePolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (PasscodeFailurePolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, PasscodeFailurePolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private PasscodeFailurePolicy(int value) {
+	PasscodeFailurePolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

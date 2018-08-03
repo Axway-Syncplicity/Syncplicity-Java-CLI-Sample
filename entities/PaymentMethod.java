@@ -3,7 +3,9 @@ package entities;
 import java.io.Serializable;
 
 public enum PaymentMethod implements Serializable{
-	// A type wasn't provided.
+	/**
+	 * A type wasn't provided.
+	 */
 	Unknown(0),
 
 	CreditCard(1),
@@ -18,14 +20,14 @@ public enum PaymentMethod implements Serializable{
 		if (mappings == null) {
 			synchronized (PaymentMethod.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, PaymentMethod>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private PaymentMethod(int value) {
+	PaymentMethod(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

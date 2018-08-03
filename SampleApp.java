@@ -6,7 +6,6 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -14,6 +13,7 @@ import oauth.OAuth;
 import util.APIContext;
 import examples.ContentExample;
 import examples.ProvisioningExample;
+import util.ConfigurationHelper;
 
 /**
  * @author Syncplicity
@@ -21,6 +21,10 @@ import examples.ProvisioningExample;
  */
 public class SampleApp {
 
+	// SECURITY WARNING!
+    // Do NOT reproduce this code in a production project.
+    // Disabling SSL certificate validation makes code vulnerable to man-in-the-middle attacks,
+    // which ultimately make SSL pointless.
 	private static void disableSslVerification() {
 		try {
 			// Create a trust manager that does not validate certificate chains
@@ -38,32 +42,27 @@ public class SampleApp {
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
 			// Create all-trusting host name verifier
-			HostnameVerifier allHostsValid = new HostnameVerifier() {
-				@Override
-				public boolean verify(String hostname, SSLSession session) {
-					return true;
-				}
-			};
+			HostnameVerifier allHostsValid = (hostname, session) -> true;
 			// Install the all-trusting host verifier
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
+		} catch (NoSuchAlgorithmException | KeyManagementException e) {
 			e.printStackTrace();
 		}
-	}
+    }
 	
 	static {
 		disableSslVerification();
 	}
 	
 	/**
-	 * @param args
+	 * @param args program start arguments
 	 */
 	public static void main(String[] args) {
 		
 		System.out.println( "Java Sample App starting...");
-		System.out.println("");
+		System.out.println();
+
+		ConfigurationHelper.ValidateConfiguration();
 		
 		/* 
 		 * The sample app will show simplified examples of calls that you can make against the 
@@ -72,7 +71,7 @@ public class SampleApp {
 		 * The example calls that this app will make include:
 		 * 
 		 * Authorization
-		 * - OUath authorization call (to allow this app to connect to the gateway and make API calls)
+		 * - OAuth authorization call (to allow this app to connect to the gateway and make API calls)
 		 * 
 		 * Provisioning
 		 * - Creating new users associated with a company
@@ -84,11 +83,11 @@ public class SampleApp {
 		 * - Uploading a folder with one or more files in it.
 		 * 
 		 * Reporting
-		 * - Scheduling an existingSyncplicity Report and download the CSV for that report
+		 * - Scheduling an existing Syncplicity Report and download the CSV for that report
 		 */
 		OAuth.authenticate();
 		
-		System.out.println("");
+		System.out.println();
 		
 		if( !APIContext.isAuthenticated() ) {
 			System.err.println( "The OAuth authentication has failed, the app cannot continue." );
@@ -99,10 +98,10 @@ public class SampleApp {
 		}
 		
 		ProvisioningExample.execute();
-		System.out.println("");
+		System.out.println();
 		System.out.println("Provisioning part is completed.");
 
-		System.out.println("");
+		System.out.println();
 		System.out.println("Starting Content part...");
 		ContentExample.execute();
 		System.out.println("Content part is completed.");

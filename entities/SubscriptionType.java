@@ -6,7 +6,9 @@ import java.io.Serializable;
  User Account Type
  */
 public enum SubscriptionType implements Serializable {
-	// A type wasn't provided.
+	/**
+	 * A type wasn't provided.
+	 */
 	Unknown(0),
 
 	/** 
@@ -32,14 +34,14 @@ public enum SubscriptionType implements Serializable {
 		if (mappings == null) {
 			synchronized (SubscriptionType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, SubscriptionType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private SubscriptionType(int value) {
+	SubscriptionType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

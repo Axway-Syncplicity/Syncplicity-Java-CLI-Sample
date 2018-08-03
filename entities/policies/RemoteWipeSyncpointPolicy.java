@@ -28,14 +28,14 @@ public enum RemoteWipeSyncpointPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (RemoteWipeSyncpointPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, RemoteWipeSyncpointPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private RemoteWipeSyncpointPolicy(int value) {
+	RemoteWipeSyncpointPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

@@ -16,14 +16,14 @@ public enum QuotaOwnership implements Serializable {
 		if (mappings == null) {
 			synchronized (QuotaOwnership.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, QuotaOwnership>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private QuotaOwnership(int value) {
+	QuotaOwnership(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

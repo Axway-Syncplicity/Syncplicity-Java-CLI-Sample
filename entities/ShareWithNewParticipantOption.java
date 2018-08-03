@@ -21,14 +21,14 @@ public enum ShareWithNewParticipantOption implements Serializable {
 		if (mappings == null) {
 			synchronized (ShareWithNewParticipantOption.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ShareWithNewParticipantOption>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ShareWithNewParticipantOption(int value) {
+	ShareWithNewParticipantOption(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

@@ -25,14 +25,14 @@ public enum OpenInPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (OpenInPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, OpenInPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private OpenInPolicy(int value) {
+	OpenInPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

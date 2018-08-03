@@ -17,14 +17,14 @@ public enum FolderStatus implements Serializable {
 		if (mappings == null) {
 			synchronized (FolderStatus.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, FolderStatus>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private FolderStatus(int value) {
+	FolderStatus(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

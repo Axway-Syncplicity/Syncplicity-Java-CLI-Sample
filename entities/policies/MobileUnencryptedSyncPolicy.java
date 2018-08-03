@@ -28,14 +28,14 @@ public enum MobileUnencryptedSyncPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (MobileUnencryptedSyncPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, MobileUnencryptedSyncPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private MobileUnencryptedSyncPolicy(int value) {
+	MobileUnencryptedSyncPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

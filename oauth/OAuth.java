@@ -18,10 +18,12 @@ public class OAuth
 		APIContext.setOAuthResponse(tokenResponse);
 	}
 	
-	//This call will invalidate the current oauth 
-	//and any refresh-tokens along with removing
-	//the grant of access to the application to 
-	//the given user account.   
+	/**
+	 * This call will invalidate the current oauth
+	 * and any refresh-tokens along with removing
+	 * the grant of access to the application to
+	 * the given user account.
+	 */
 	public static void revokeToken() {
 		
 		String revokeUrl = ConfigurationHelper.getOAuthRevokeTokenUrl();
