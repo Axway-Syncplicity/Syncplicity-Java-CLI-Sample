@@ -15,13 +15,11 @@ import entities.UserAccountType;
 
 public class ProvisioningExample {
 
-	private static int NewUsersCount = 5;
-	
 	private static User[] createdUsers;
 	private static User[] groupMemberUsers;
 	private static Group  createdGroup;
 	
-	/*
+	/**
 	 * Provisioning
      * - Creating new users associated with a company
      * - Creating a new user group (a group as defined in Syncplicity as having access to the same shared folders)
@@ -39,15 +37,12 @@ public class ProvisioningExample {
 	}
 	
 	private static void deleteGroup() {
-		//Remove the previously created group
+		// Remove the previously created group
 		if( createdGroup == null ) {
 			return;
 		}
 		
-		System.out.println("");
-		System.out.println("Press enter before Group Deletion...");
-		
-		System.out.println("");
+		System.out.println();
 		System.out.println(String.format("Delete Group With Id %s", createdGroup.Id));
 		GroupsService.deleteGroup(createdGroup.Id);
 	}
@@ -58,22 +53,19 @@ public class ProvisioningExample {
 			return;
 		}
 		
-		System.out.println("");
-		System.out.println("Press enter before Group Members Deletion...");
-		
 		// remove selected group member
-		System.out.println("");
+		System.out.println();
 		System.out.println("Start Group Member Deletion...");
 
 		for( User user : groupMemberUsers ) {
-			System.out.println("");
+			System.out.println();
 			System.out.println( String.format( "Removing user[%s] from group [%s].", user.EmailAddress, createdGroup.Id ));
 			GroupMembersService.deleteGroupMember(
 					createdGroup.Id,
 					user.EmailAddress);
 		}
 
-		System.out.println("");
+		System.out.println();
 		System.out.println("Finish Group Member Deletion.");		
 	}
 	
@@ -83,7 +75,7 @@ public class ProvisioningExample {
 			return;
 		}
 		
-		System.out.println("");
+		System.out.println();
 		System.out.println("Start Adding Group Members...");
 		
 		groupMemberUsers = GroupMembersService.addGroupMembers( 
@@ -91,11 +83,11 @@ public class ProvisioningExample {
 							  createdUsers
 						   );
 
-		System.out.println("");
+		System.out.println();
 		if (groupMemberUsers == null || groupMemberUsers.length == 0) {
 
 			int addedCount = (groupMemberUsers == null ? 0 : groupMemberUsers.length);
-			System.err.println(String.format("Error Occured During Adding Some Of Members. Number of Added Members:%d", addedCount));
+			System.err.println(String.format("Error Occurred During Adding Some Of Members. Number of Added Members:%d", addedCount));
 				
 			return;
 		}
@@ -105,7 +97,7 @@ public class ProvisioningExample {
 	
 	private static void createGroup() {
 
-		System.out.println("");
+		System.out.println();
 
 		String companyGuid = APIContext.getCompanyGuid();
         if (companyGuid == null || companyGuid.isEmpty())
@@ -123,10 +115,10 @@ public class ProvisioningExample {
 
 		Group[] createdGroups = GroupsService.createGroups(companyGuid, new Group[] { group });
 		
-		System.out.println("");
+		System.out.println();
 		
 		if (createdGroups == null || createdGroups.length == 0) {
-			System.err.println("Error Occured During Creating Group.");
+			System.err.println("Error Occurred During Creating Group.");
 			return;
 		}
 
@@ -140,14 +132,15 @@ public class ProvisioningExample {
 		String baseEmail = String.format("fake-user-%s@fakedomain.com", Long.toString(new Date().getTime()).substring(0, 7));
 		
 		// create users with email typed by user + sequence number
-		System.out.println("");
+		System.out.println();
 		System.out.println("Start Users Creation...");
 		
 		String[] emailParts = baseEmail.split("@");
 
-		List<User> usersToAdd = new ArrayList<User>();
+		List<User> usersToAdd = new ArrayList<>();
 
-		for (int i = 1; i <= NewUsersCount; i++) {
+		int newUsersCount = 5;
+		for (int i = 1; i <= newUsersCount; i++) {
 			
 			User user = new User();
 			user.AccountType = UserAccountType.LimitedBusiness;
@@ -157,13 +150,13 @@ public class ProvisioningExample {
 			user.LastName = String.format("Lastname %d", i);
 
 			usersToAdd.add(user);
-			System.out.println("");			
+			System.out.println();
 			System.out.println(String.format("Preparing User #%d [%s].", i, user.EmailAddress));
 			System.out.println(String.format("\tChecking if user [%s] already exists.", user.EmailAddress));
 			//Checking if we've created this user already, if so, we'll delete it, and then recreate it again (below).
 			User checkUser = UsersService.getUser( user.EmailAddress, true );
 			
-			System.out.println("");
+			System.out.println();
 			
 			if( checkUser != null ) {
 				//If this is the second time running, we'll need to clean up (delete) previous run's users
@@ -181,16 +174,16 @@ public class ProvisioningExample {
 			}
 		}
 
-		System.out.println("");
+		System.out.println();
 		System.out.println( "Calling UsersService to add users" );
-		createdUsers = UsersService.createUsers(usersToAdd.toArray(new User[usersToAdd.size()]));
+		createdUsers = UsersService.createUsers(usersToAdd.toArray(new User[0]));
 
-		System.err.println("");
+		System.err.println();
 		if (createdUsers == null || createdUsers.length == 0 ) {
 
 			int addedCount = (createdUsers == null ? 0 : createdUsers.length);
 
-			System.err.println( String.format("\tError Occured During Creating Some Of Users. Number of Created Users:%d", addedCount) );
+			System.err.println( String.format("\tError Occurred During Creating Some Of Users. Number of Created Users:%d", addedCount) );
 		}
 		else {
 			System.out.println("\tFinished Users Creation.");
@@ -203,21 +196,18 @@ public class ProvisioningExample {
 			return;
 		}
 		
-		System.out.println("");
-		System.out.println("Press enter before Users Deletion...");
-		
 		// remove created users
 		System.out.println("Start Users Deletion...");
 
 		for( User user : createdUsers ) {
 
-			System.out.println("");
+			System.out.println();
 			System.out.println(String.format("\tDelete User [%s].",user.EmailAddress));
 			
 			UsersService.deleteUser(user.EmailAddress);
 		}
 
-		System.out.println("");
+		System.out.println();
 		System.out.println("Finished Users Deletion.");
 	}
 }

@@ -24,14 +24,14 @@ public enum StoragePasswordComplexityPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (StoragePasswordComplexityPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, StoragePasswordComplexityPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private StoragePasswordComplexityPolicy(int value) {
+	StoragePasswordComplexityPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

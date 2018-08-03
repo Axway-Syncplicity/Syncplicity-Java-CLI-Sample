@@ -7,7 +7,9 @@ import java.io.Serializable;
  Please note that enum values DO NOT mean specific number of years, month, days or anything else.
  */
 public enum BillingInterval implements Serializable {
-	// A type wasn't provided.
+	/**
+	 * A type wasn't provided.
+	 */
 	Unknown(0),
 
 	Monthly(1),
@@ -20,14 +22,14 @@ public enum BillingInterval implements Serializable {
 		if (mappings == null) {
 			synchronized (BillingInterval.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, BillingInterval>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private BillingInterval(int value) {
+	BillingInterval(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

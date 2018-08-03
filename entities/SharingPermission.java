@@ -18,14 +18,14 @@ public enum SharingPermission implements Serializable {
 		if (mappings == null) {
 			synchronized (SharingPermission.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, SharingPermission>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private SharingPermission(int value) {
+	SharingPermission(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

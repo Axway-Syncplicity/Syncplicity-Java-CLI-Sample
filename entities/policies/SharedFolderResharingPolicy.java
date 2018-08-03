@@ -31,14 +31,14 @@ public enum SharedFolderResharingPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (SharedFolderResharingPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, SharedFolderResharingPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private SharedFolderResharingPolicy(int value) {
+	SharedFolderResharingPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

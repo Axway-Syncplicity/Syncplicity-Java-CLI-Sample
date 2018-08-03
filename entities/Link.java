@@ -8,7 +8,7 @@ import java.util.Date;
 public class Link implements Serializable {
 	public String Token;
 
-	public int SyncPointId;
+	public long SyncPointId;
 
 	public String VirtualPath;
 

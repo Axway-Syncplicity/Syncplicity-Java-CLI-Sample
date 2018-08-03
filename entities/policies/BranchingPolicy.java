@@ -3,7 +3,6 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum BranchingPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -24,14 +23,14 @@ public enum BranchingPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (BranchingPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, BranchingPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private BranchingPolicy(int value) {
+	BranchingPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

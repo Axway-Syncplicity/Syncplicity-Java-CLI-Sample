@@ -15,7 +15,7 @@ public class EnumAdapterFactory implements TypeAdapterFactory {
 	public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
 		Class<? super T> rawType = type.getRawType();
 		if (rawType.isEnum()) {
-			return new EnumTypeAdapter<T>(type);
+			return new EnumTypeAdapter<>(type);
 		}
 		return null;
 	}
@@ -23,7 +23,7 @@ public class EnumAdapterFactory implements TypeAdapterFactory {
 	public class EnumTypeAdapter<T> extends TypeAdapter<T> {
 		TypeToken<T> type;
 
-		public EnumTypeAdapter(TypeToken<T> type) {
+		EnumTypeAdapter(TypeToken<T> type) {
 			this.type = type;
 		}
 
@@ -34,28 +34,26 @@ public class EnumAdapterFactory implements TypeAdapterFactory {
 				return;
 			}
 			try {
-				Method getValueMethod = type.getRawType().getMethod("getValue",
-						new Class[] {});
-				out.value(value == null ? null : (Number) getValueMethod
-						.invoke(value, new Object[] {}));
+				Method getValueMethod = type.getRawType().getMethod("getValue");
+				Object rawValue = getValueMethod.invoke(value);
+				out.value((Number) rawValue);
 
 				return;
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
-			out.value(value == null ? null : ((Enum) value).name());
+			out.value(((Enum) value).name());
 
 		}
 
 		@SuppressWarnings("unchecked")
-		public T read(JsonReader in) throws IOException {
+		public T read(JsonReader in) {
 			try {
-				int intval = Integer.parseInt(in.nextString());
-				Method forValueMethod = type.getRawType().getMethod("forValue",
-						new Class[] { int.class });
+				int intVal = Integer.parseInt(in.nextString());
+				Method forValueMethod = type.getRawType().getMethod("forValue", int.class);
 
-				return (T) forValueMethod.invoke(null, new Object[] { intval });
-			} catch (Exception e) {
+				return (T) forValueMethod.invoke(null, new Object[] { intVal });
+			} catch (Exception ignored) {
 			}
 
 			return null;

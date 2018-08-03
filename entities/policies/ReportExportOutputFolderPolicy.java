@@ -28,14 +28,14 @@ public enum ReportExportOutputFolderPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ReportExportOutputFolderPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ReportExportOutputFolderPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ReportExportOutputFolderPolicy(int value) {
+	ReportExportOutputFolderPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

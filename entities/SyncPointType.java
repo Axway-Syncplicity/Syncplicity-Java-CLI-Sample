@@ -25,14 +25,14 @@ public enum SyncPointType
 		if (mappings == null) {
 			synchronized (SyncPointType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, SyncPointType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private SyncPointType(int value) {
+	SyncPointType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

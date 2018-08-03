@@ -24,14 +24,14 @@ public enum AdminPasswordComplexityPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (AdminPasswordComplexityPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, AdminPasswordComplexityPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private AdminPasswordComplexityPolicy(int value) {
+	AdminPasswordComplexityPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

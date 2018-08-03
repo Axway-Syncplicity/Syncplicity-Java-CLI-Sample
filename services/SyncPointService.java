@@ -6,7 +6,6 @@ import util.ConfigurationHelper;
 
 /**
  * A service for retrieving SyncPoint data.
- *
  */
 public class SyncPointService extends APIGateway {
 
@@ -30,7 +29,7 @@ public class SyncPointService extends APIGateway {
      * 
      * @param suppressErrors
      *            indicates whether errors should be suppressed
-     * @return the <code>SyncPoint</code> objects
+     * @return the {@link SyncPoint} objects
      */
     public static SyncPoint[] getSyncPoints(boolean suppressErrors) {
         SyncPoint[] syncPoints = httpGet(syncPointsUrl, SyncPoint[].class, suppressErrors);
@@ -44,7 +43,7 @@ public class SyncPointService extends APIGateway {
      *            the SyncPoint ID
      * @param suppressErrors
      *            indicates whether errors should be suppressed
-     * @return the matching <code>SyncPoint</code> object
+     * @return the matching {@link SyncPoint} object
      */
     public static SyncPoint getSyncPoint(long syncPointId, boolean suppressErrors) {
         return httpGet(String.format(syncPointUrl, syncPointId), SyncPoint.class, suppressErrors);
@@ -54,8 +53,8 @@ public class SyncPointService extends APIGateway {
      * Creates a SyncPoint.
      * 
      * @param syncPoints
-     *            the <code>SyncPoint</code> DTOs
-     * @return the created <code>SyncPoint</code> records
+     *            the {@link SyncPoint} DTOs
+     * @return the created {@link SyncPoint} records
      */
     public static SyncPoint[] createSyncPoints(SyncPoint[] syncPoints) {
         return httpPost(syncPointsUrl, "application/json", syncPoints);

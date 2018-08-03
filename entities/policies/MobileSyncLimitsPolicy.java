@@ -29,14 +29,14 @@ public enum MobileSyncLimitsPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (MobileSyncLimitsPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, MobileSyncLimitsPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private MobileSyncLimitsPolicy(int value) {
+	MobileSyncLimitsPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

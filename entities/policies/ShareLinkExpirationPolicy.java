@@ -6,7 +6,6 @@ import java.io.Serializable;
  * Share link expiration option
  */
 public enum ShareLinkExpirationPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -27,14 +26,14 @@ public enum ShareLinkExpirationPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ShareLinkExpirationPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ShareLinkExpirationPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ShareLinkExpirationPolicy(int value) {
+	ShareLinkExpirationPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

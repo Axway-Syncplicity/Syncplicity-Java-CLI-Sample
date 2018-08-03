@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class FileVersion implements Serializable {
 	public int SyncpointId;
 
-	public int Id;
+	public long Id;
 
 	public String UserName;
 

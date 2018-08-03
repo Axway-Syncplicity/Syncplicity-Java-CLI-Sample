@@ -6,7 +6,6 @@ import entities.Group;
 
 /**
  * Class for requests to group.svc and groups.svc
- *
  */
 public class GroupsService 
 	extends APIGateway {

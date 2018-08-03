@@ -3,7 +3,6 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum RemoteWipeEndpointPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -24,14 +23,14 @@ public enum RemoteWipeEndpointPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (RemoteWipeEndpointPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, RemoteWipeEndpointPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private RemoteWipeEndpointPolicy(int value) {
+	RemoteWipeEndpointPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

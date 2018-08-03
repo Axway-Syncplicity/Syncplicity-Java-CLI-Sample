@@ -15,7 +15,6 @@ import services.SyncPointService;
 
 /**
  * Provides Syncplicity Content API usage samples.
- *
  */
 public class ContentExample {
 
@@ -223,7 +222,7 @@ public class ContentExample {
             return;
         }
         generatedLink = generatedLinks[0];
-        System.out.println(String.format("Generated a link with URL = %s, token = .", generatedLink.DownloadUrl,
+        System.out.println(String.format("Generated a link with URL = %s, token = %s.", generatedLink.DownloadUrl,
                 generatedLink.Token));
     }
 

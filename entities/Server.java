@@ -13,14 +13,14 @@ public class Server {
 			if (mappings == null) {
 				synchronized (Status.class) {
 					if (mappings == null) {
-						mappings = new java.util.HashMap<Integer, Status>();
+						mappings = new java.util.HashMap<>();
 					}
 				}
 			}
 			return mappings;
 		}
 
-		private Status(int value) {
+		Status(int value) {
 			intValue = value;
 			getMappings().put(value, this);
 		}

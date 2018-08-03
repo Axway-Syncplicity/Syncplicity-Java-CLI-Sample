@@ -16,14 +16,14 @@ public enum QuotaAllocationType implements Serializable {
 		if (mappings == null) {
 			synchronized (QuotaAllocationType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, QuotaAllocationType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private QuotaAllocationType(int value) {
+	QuotaAllocationType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

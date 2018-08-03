@@ -23,14 +23,14 @@ public enum StorageCookiePersistancePolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (StorageCookiePersistancePolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, StorageCookiePersistancePolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private StorageCookiePersistancePolicy(int value) {
+	StorageCookiePersistancePolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

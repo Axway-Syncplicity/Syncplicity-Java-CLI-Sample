@@ -6,7 +6,6 @@ import util.ConfigurationHelper;
 
 /**
  * A service for retrieving Storage Endpoint data.
- *
  */
 public class StorageEndpointService extends APIGateway {
 

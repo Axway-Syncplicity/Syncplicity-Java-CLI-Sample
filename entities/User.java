@@ -5,7 +5,7 @@ import java.util.Date;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
-	public String Id;
+	public long Id;
 
 	public String EmailAddress;
 

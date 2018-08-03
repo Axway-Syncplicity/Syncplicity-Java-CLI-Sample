@@ -6,7 +6,9 @@ import java.io.Serializable;
  * User Account Type
  */
 public enum UserAccountType implements Serializable {
-	// A type wasn't provided.
+	/**
+	 * A type wasn't provided.
+	 */
 	Unknown(0),
 
 	/**
@@ -66,14 +68,14 @@ public enum UserAccountType implements Serializable {
 		if (mappings == null) {
 			synchronized (UserAccountType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, UserAccountType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private UserAccountType(int value) {
+	UserAccountType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

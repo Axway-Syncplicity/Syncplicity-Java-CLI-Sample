@@ -1,8 +1,8 @@
 package util;
 
-public class BooleanResult {
+class BooleanResult {
     private boolean result;
 
-    public void setResult(boolean value) { result = value; }
-    public boolean getResult() { return result; }
+    void setResult(boolean value) { result = value; }
+    boolean getResult() { return result; }
 }

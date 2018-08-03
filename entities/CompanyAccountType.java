@@ -21,14 +21,14 @@ public enum CompanyAccountType implements Serializable {
 		if (mappings == null) {
 			synchronized (CompanyAccountType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, CompanyAccountType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private CompanyAccountType(int value) {
+	CompanyAccountType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

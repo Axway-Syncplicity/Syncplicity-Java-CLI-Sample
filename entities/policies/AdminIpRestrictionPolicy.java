@@ -3,7 +3,6 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum AdminIpRestrictionPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -24,14 +23,14 @@ public enum AdminIpRestrictionPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (AdminIpRestrictionPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, AdminIpRestrictionPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private AdminIpRestrictionPolicy(int value) {
+	AdminIpRestrictionPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

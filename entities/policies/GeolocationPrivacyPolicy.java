@@ -22,14 +22,14 @@ public enum GeolocationPrivacyPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (GeolocationPrivacyPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, GeolocationPrivacyPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private GeolocationPrivacyPolicy(int value) {
+	GeolocationPrivacyPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

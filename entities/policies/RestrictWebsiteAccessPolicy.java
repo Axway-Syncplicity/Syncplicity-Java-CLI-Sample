@@ -3,7 +3,6 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum RestrictWebsiteAccessPolicy implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -24,14 +23,14 @@ public enum RestrictWebsiteAccessPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (RestrictWebsiteAccessPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, RestrictWebsiteAccessPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private RestrictWebsiteAccessPolicy(int value) {
+	RestrictWebsiteAccessPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

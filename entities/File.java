@@ -35,11 +35,7 @@ public class File implements Serializable {
 	public String FolderId;
 
 	/** 
-     Returns a logging-friendly string
-
-     @return 
-     A <see cref="System.String"/>
-
+     * Returns a logging-friendly string
 	 */
 	public final String ToLoggingString() {
 		return String.format("Virtual Path: %1$s, Filename: %2$s, Status: %3$s, VirtualFolderId: %4$s, LatestVersionId: %5$s", VirtualPath, Filename, Status.toString(), SyncpointId, LatestVersionId);

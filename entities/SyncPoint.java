@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class SyncPoint implements Serializable {
-	public int Id;
+	public long Id;
 
 	public SyncPointType Type = SyncPointType.values()[0];
 
 	public String Name;
 
-	public String RootFolderId;
+	public long RootFolderId;
 
 	public boolean Mapped;
 

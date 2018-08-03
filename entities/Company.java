@@ -9,7 +9,7 @@ import entities.CompanyAccountType;
 
 @SuppressWarnings("serial")
 public class Company implements Serializable {
-	public String Id;
+	public long Id;
 
 	public String Name;
 

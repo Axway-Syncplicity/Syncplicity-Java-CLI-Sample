@@ -26,14 +26,14 @@ public enum ShareLinkPasswordProtectedPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (ShareLinkPasswordProtectedPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, ShareLinkPasswordProtectedPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private ShareLinkPasswordProtectedPolicy(int value) {
+	ShareLinkPasswordProtectedPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

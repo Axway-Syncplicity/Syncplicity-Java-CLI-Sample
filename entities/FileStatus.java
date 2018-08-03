@@ -21,14 +21,14 @@ public enum FileStatus implements Serializable {
 		if (mappings == null) {
 			synchronized (FileStatus.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, FileStatus>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private FileStatus(int value) {
+	FileStatus(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

@@ -25,14 +25,14 @@ public enum DesktopShareLinkFlowPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (DesktopShareLinkFlowPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, DesktopShareLinkFlowPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private DesktopShareLinkFlowPolicy(int value) {
+	DesktopShareLinkFlowPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

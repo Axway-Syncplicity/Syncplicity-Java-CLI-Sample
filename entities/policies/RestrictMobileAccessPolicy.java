@@ -30,14 +30,14 @@ public enum RestrictMobileAccessPolicy implements Serializable {
 		if (mappings == null) {
 			synchronized (RestrictMobileAccessPolicy.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, RestrictMobileAccessPolicy>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private RestrictMobileAccessPolicy(int value) {
+	RestrictMobileAccessPolicy(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}

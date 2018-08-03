@@ -3,7 +3,6 @@ package entities.policysets;
 import java.io.Serializable;
 
 public enum EntitySetType implements Serializable {
-	// <summary>
 	/**
 	 * Default value
 	 */
@@ -28,14 +27,14 @@ public enum EntitySetType implements Serializable {
 		if (mappings == null) {
 			synchronized (EntitySetType.class) {
 				if (mappings == null) {
-					mappings = new java.util.HashMap<Integer, EntitySetType>();
+					mappings = new java.util.HashMap<>();
 				}
 			}
 		}
 		return mappings;
 	}
 
-	private EntitySetType(int value) {
+	EntitySetType(int value) {
 		intValue = value;
 		getMappings().put(value, this);
 	}
