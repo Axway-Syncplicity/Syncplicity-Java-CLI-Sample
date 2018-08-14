@@ -4,6 +4,8 @@ import util.APIGateway;
 import entities.Group;
 import entities.User;
 
+import java.util.UUID;
+
 /**
  * Class for requests to group_members.svc and group_member.svc
  */
@@ -33,7 +35,7 @@ public class GroupMembersService
 	 * 
 	 * @return Array of added users.
 	 */
-	public static User[] addGroupMembers(String groupGuid, User[] users) {
+	public static User[] addGroupMembers(UUID groupGuid, User[] users) {
 		return httpPost(String.format(groupMembersUrl, groupGuid), "application/json", users );
 	}
 
@@ -44,7 +46,7 @@ public class GroupMembersService
 	 * @param groupGuid Group Guid.
 	 * @param userEmail Email of deleted group member.
 	 */
-	public static void deleteGroupMember(String groupGuid, String userEmail) {
+	public static void deleteGroupMember(UUID groupGuid, String userEmail) {
 		
 		httpDelete(String.format(groupMemberUrl, groupGuid, userEmail), Group.class);
 	}
