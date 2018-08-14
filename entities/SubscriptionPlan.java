@@ -3,8 +3,6 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
-
-
 @SuppressWarnings("serial")
 public class SubscriptionPlan implements Serializable {
 	public SubscriptionType Type = SubscriptionType.values()[0];

@@ -60,6 +60,27 @@ This sample application demonstrates usage of Syncplicity APIs. This is what you
     * Update the EE account owner email, typically the sandbox owner email for development purposes (`<Owner Email>`)
 5. Build and Run the application.
 
+### Debugging with Fiddler
+
+By default, the sample app will not be captured by Fiddler.
+To make Fiddler capture requests, specify proxy address and port in JVM startup parameters:
+
+    -DproxyHost=127.0.0.1
+    -DproxyPort=8888
+
+* If you run the sample from console, add these two parameters to `java.exe` command-line arguments.
+* If you use IntelliJ IDEA, make sure to add them to 'VM options' parameter at Run -> Edit Configurations.
+* For other IDEs, please refer to their documentation.
+
+Additionally, you will most likely need to disable SSL certificate validation to see HTTPS traffic to Syncplicity.
+WARNING: this should never be done in production code! Disabling validation puts application users at risk of
+a malicious person intercepting their data without their knowledge.
+SSL validation can be disabled by uncommenting this line in `SampleApp.java`:
+
+    static {
+      // unsafeDisableSslVerification();
+    }
+
 ## Contributing
 
 See contribute.md file in the root directory if you want to submit an issue or add new sample use case etc.
@@ -68,7 +89,7 @@ See contribute.md file in the root directory if you want to submit an issue or a
 
 ![alt text][Axwaylogo] Axway Syncplicity Team
 
-[Axwaylogo]: https://github.com/Axway-API-Management/Common/blob/master/img/AxwayLogoSmall.png  "Axway logo"
+[Axwaylogo]: https://github.com/Axway-syncplicity/Assets/raw/master/AxwayLogoSmall.png "Axway logo"
 
 ## License
 

@@ -3,8 +3,13 @@ package entities.policies;
 import java.io.Serializable;
 
 public enum PasswordComplexityOptions implements Serializable {
-	Unknown(0), Number(1), Lower(2), Upper(4), SpecialCharacter(8), NumberOrSpecialCharacter(
-			16), NotDictionaryWord(32);
+	Unknown(0),
+	Number(1),
+	Lower(2),
+	Upper(4),
+	SpecialCharacter(8),
+	NumberOrSpecialCharacter(16),
+	NotDictionaryWord(32);
 
 	private int intValue;
 	private static java.util.HashMap<Integer, PasswordComplexityOptions> mappings;

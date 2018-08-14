@@ -26,7 +26,7 @@ class JSONSerialization {
 	 * 
 	 * @return JSON string which represents object.
 	 */
-	static <T> String serizalize(T entity) {
+	static <T> String serialize(T entity) {
 		
 		if (entity != null) {
 			Gson gson = new GsonBuilder()
@@ -49,7 +49,7 @@ class JSONSerialization {
 	 * 
 	 * @return The instance of object of type Class<T>.
 	 */
-	static <T> T deserizalize(String serialized, Class<T> classType) {
+	static <T> T deserialize(String serialized, Class<T> classType) {
 		
 		if( !StringUtils.isEmpty(serialized) && !StringUtils.isWhitespace(serialized) ) {
 			

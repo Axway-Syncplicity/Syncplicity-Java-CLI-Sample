@@ -2,8 +2,6 @@ package entities.policysets;
 
 import java.io.Serializable;
 
-
-
 import entities.Group;
 import entities.policies.Policy;
 

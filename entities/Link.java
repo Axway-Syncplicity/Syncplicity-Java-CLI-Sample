@@ -3,7 +3,6 @@ package entities;
 import java.io.Serializable;
 import java.util.Date;
 
-
 @SuppressWarnings("serial")
 public class Link implements Serializable {
 	public String Token;

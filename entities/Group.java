@@ -1,12 +1,13 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import entities.policysets.PolicySet;
 
 @SuppressWarnings("serial")
 public class Group implements Serializable {
-	public String Id;
+	public UUID Id;
 
 	public String Name;
 

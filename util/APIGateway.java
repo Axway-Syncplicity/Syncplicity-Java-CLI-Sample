@@ -37,8 +37,6 @@ public abstract class APIGateway {
 	 * @param uri The url of request.
 	 * 
 	 * @return Created request.
-	 * 
-	 * @throws IOException
 	 */
 	private static HttpURLConnection createRequest(String method, String uri, boolean isAuthenticationCall )
 			throws IOException {
@@ -62,8 +60,6 @@ public abstract class APIGateway {
 	 * 
 	 * @param request The request object.
 	 * @param body The string representation of body.
-	 * 
-	 * @throws IOException
 	 */
 	private static void writeBody(HttpURLConnection request, String body, String contentType)
 			throws IOException {
@@ -183,7 +179,7 @@ public abstract class APIGateway {
 				System.out.println("Response: \n" + prettyJsonString);
 
 				if (!classType.isAssignableFrom(String.class)) {
-					return JSONSerialization.deserizalize(response, classType);
+					return JSONSerialization.deserialize(response, classType);
 				}
 			} catch (Exception e) {
 				System.out.println("Could not parse the response as JSON. Probably the response is of some other format.");
@@ -364,7 +360,7 @@ public abstract class APIGateway {
 	@SuppressWarnings("unchecked")
 	protected static <T> T httpPost(String uri, String contentType, T entity ) {
 		
-		return httpPost(false, uri, contentType, JSONSerialization.serizalize(entity), (Class<T>) entity.getClass());
+		return httpPost(false, uri, contentType, JSONSerialization.serialize(entity), (Class<T>) entity.getClass());
 	}
 
 	/**
@@ -443,7 +439,7 @@ public abstract class APIGateway {
 	@SuppressWarnings("unchecked")
 	protected static <T> T httpPut(String uri, T entity) {
 		
-		return httpPut(uri, JSONSerialization.serizalize(entity), (Class<T>) entity.getClass());
+		return httpPut(uri, JSONSerialization.serialize(entity), (Class<T>) entity.getClass());
 	}
 
 	/**

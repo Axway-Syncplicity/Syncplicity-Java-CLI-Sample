@@ -2,14 +2,11 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
-
-import entities.CompanyAccountType;
-
+import java.util.UUID;
 
 @SuppressWarnings("serial")
 public class Company implements Serializable {
-	public long Id;
+	public UUID Id;
 
 	public String Name;
 
