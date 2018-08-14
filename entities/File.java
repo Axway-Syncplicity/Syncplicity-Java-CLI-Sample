@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class File implements Serializable {
 	public int SyncpointId;
 
-	public String FileId;
+	public long FileId;
 
 	public String VirtualPath;
 
@@ -32,7 +32,7 @@ public class File implements Serializable {
 
 	public String ThumbnailUrl;
 
-	public String FolderId;
+	public long FolderId;
 
 	/** 
      Returns a logging-friendly string

@@ -178,11 +178,11 @@ public class ContentExample {
             System.out.println("No files in the syncpoint.");
             return;
         }
-        String fileId = files[0].FileId;
+        long fileId = files[0].FileId;
         File file = FileService.getFile(syncPoint.Id, fileId, true);
         if (file == null) {
             System.err.println(
-                    String.format("Could not find file with SyncPointId=%s and FileId=%s", syncPoint.Id, fileId));
+                    String.format("Could not find file with SyncPointId=%s and FileId=%d", syncPoint.Id, fileId));
             return;
         }
         uploadedFile = file;

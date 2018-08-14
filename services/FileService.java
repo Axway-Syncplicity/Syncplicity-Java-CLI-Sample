@@ -71,7 +71,7 @@ public class FileService extends APIGateway {
      *            Indicates whether errors should be suppressed
      * @return the {@link File} info
      */
-    public static File getFile(long syncPointId, String fileId, boolean suppressErrors) {
+    public static File getFile(long syncPointId, long fileId, boolean suppressErrors) {
         return httpGet(String.format(fileUrl, syncPointId, fileId), File.class, suppressErrors);
     }
 
@@ -86,7 +86,7 @@ public class FileService extends APIGateway {
      *            indicates whether the errors should be suppressed
      * @return the File contents as a string
      */
-    public static String downloadFile(long syncPointId, String fileId, boolean suppressErrors) {
+    public static String downloadFile(long syncPointId, long fileId, boolean suppressErrors) {
         File file = getFile(syncPointId, fileId, true);
         SyncPoint syncPoint = SyncPointService.getSyncPoint(syncPointId, suppressErrors);
         StorageEndpoint storageEndpoint = getStorageEndpoint(syncPoint.StorageEndpointId);
