@@ -11,7 +11,7 @@ public enum ShareLinkPasswordComplexity implements Serializable {
 	 */
 	Unknown(0),
 	/**
-	 * Password need to be of configirable length and can contain anything
+	 * Password need to be of configurable length and can contain anything
 	 */
 	Default(1),
 	/**

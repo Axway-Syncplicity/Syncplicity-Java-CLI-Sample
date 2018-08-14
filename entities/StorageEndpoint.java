@@ -2,7 +2,6 @@ package entities;
 
 import java.io.Serializable;
 
-
 @SuppressWarnings("serial")
 public class StorageEndpoint implements Serializable {
 	public String Id;

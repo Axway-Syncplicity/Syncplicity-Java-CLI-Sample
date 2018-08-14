@@ -2,10 +2,11 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
-	public long Id;
+	public UUID Id;
 
 	public String EmailAddress;
 
