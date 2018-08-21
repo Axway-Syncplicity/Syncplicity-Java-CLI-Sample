@@ -60,6 +60,24 @@ This sample application demonstrates usage of Syncplicity APIs. This is what you
     * Update the EE account owner email, typically the sandbox owner email for development purposes (`<Owner Email>`)
 5. Build and Run the application.
 
+### Storage Vault Authentication Sample
+
+__Note:__ This is an advanced concept.
+If your company does not use the SVA, you don't need to study it.
+[Learn more about SVA.](https://syncplicity.zendesk.com/hc/en-us/articles/202659170-About-Syncplicity-StorageVaults-with-authentication-)
+
+Working with Storage Vaults protected with SVA requires additional authentication procedures.
+To run SVA sample:
+
+1. Obtain **Storage Token**, **Machine Id** and **Machine Token**
+    used to authenticate calls to Storage Vault.
+    Follow the 'Setup Procedure' of the [Content Migration Guide](https://developer.syncplicity.com/content-migration-guide) to get those.
+2. Configure the sample (`Resources\config.properties`):
+    1. Set Storage Token value (`<Storage Token>`)
+    2. Set Machine Token value (`<Machine Token>`)
+    3. Set Machine Id value (`<Machine Id>`)
+3. Build and run the sample application
+
 ### Debugging with Fiddler
 
 By default, the sample app will not be captured by Fiddler.

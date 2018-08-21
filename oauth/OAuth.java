@@ -9,15 +9,44 @@ public class OAuth
 	extends APIGateway {
 
 	public static void authenticate() {
-		
+
+		ObtainUserAccessToken();
+
+		if(ConfigurationHelper.isMachineTokenAuthenticationEnabledForStorageVaults()){
+			ObtainMachineAccessToken();
+		}
+	}
+
+	private static void ObtainUserAccessToken() {
 		String authorizationUrl = ConfigurationHelper.getOAuthTokenUrl();
 		String params           = "grant_type=client_credentials";
-			
-		TokenResponse tokenResponse = httpPost(true, authorizationUrl, "application/x-www-form-urlencoded", params, TokenResponse.class);
-		
+
+		TokenResponse tokenResponse = httpPost(
+				true,
+				false,
+				authorizationUrl,
+				"application/x-www-form-urlencoded",
+				params,
+				TokenResponse.class);
+
 		APIContext.setOAuthResponse(tokenResponse);
 	}
-	
+
+	private static void ObtainMachineAccessToken() {
+		String authorizationUrl = ConfigurationHelper.getOAuthTokenUrl();
+		String params           = "grant_type=client_credentials";
+
+		TokenResponse tokenResponse = httpPost(
+				true,
+				true,
+				authorizationUrl,
+				"application/x-www-form-urlencoded",
+				params,
+				TokenResponse.class);
+
+		APIContext.setMachineAccessToken(tokenResponse.getAccessToken());
+	}
+
 	/**
 	 * This call will invalidate the current oauth
 	 * and any refresh-tokens along with removing

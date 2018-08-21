@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import oauth.OAuth;
 
@@ -32,14 +33,44 @@ public abstract class APIGateway {
 
 	/**
 	 * Creates request object to invoke the api REST call.
+	 *
+	 * @param method The request's method.
+	 * @param uri The url of request.
+	 *
+	 * @return Created request.
+	 */
+	private static HttpURLConnection createRequest(
+            String method,
+            String uri,
+            Map<String, String> additionalHeaders,
+            boolean isAuthenticationCall,
+            boolean isMachineAuthCall
+    ) throws IOException {
+		return createRequest(
+				method,
+				uri,
+				additionalHeaders,
+				isAuthenticationCall,
+				isMachineAuthCall,
+				false);
+	}
+
+	/**
+	 * Creates request object to invoke the api REST call.
 	 * 
 	 * @param method The request's method.
 	 * @param uri The url of request.
 	 * 
 	 * @return Created request.
 	 */
-	private static HttpURLConnection createRequest(String method, String uri, boolean isAuthenticationCall )
-			throws IOException {
+	private static HttpURLConnection createRequest(
+			String method,
+			String uri,
+			Map<String, String> additionalHeaders,
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken
+	) throws IOException {
 		
 		System.out.println(String.format("Creating %s request to %s", method.toUpperCase(), uri));
 
@@ -52,7 +83,17 @@ public abstract class APIGateway {
 		request.setDoOutput(true);
 		request.setDoInput(true);
 
-		return applyConsumerCredentials(request, isAuthenticationCall );
+		if(additionalHeaders != null) {
+			for (Map.Entry<String, String> entry: additionalHeaders.entrySet()) {
+				request.setRequestProperty(entry.getKey(), entry.getValue());
+			}
+		}
+
+		return applyConsumerCredentials(
+				request,
+				isAuthenticationCall,
+				isMachineAuthCall,
+				useMachineAccessTokenInsteadOfUserAccessToken );
 	}
 
 	/**
@@ -86,34 +127,76 @@ public abstract class APIGateway {
 
 	/**
 	 * Applies the application key and secret to the request
+	 *
+	 * @param request The request object.
+	 *
+	 * @return The current request.
+	 */
+	private static HttpURLConnection applyConsumerCredentials(
+            HttpURLConnection request,
+            boolean isAuthenticationCall,
+            boolean isMachineAuthCall
+    ) {
+		return applyConsumerCredentials(
+				request,
+				isAuthenticationCall,
+				isMachineAuthCall,
+				false);
+	}
+
+	/**
+	 * Applies the application key and secret to the request
 	 * 
 	 * @param request The request object.
 	 * 
 	 * @return The current request.
 	 */
-	private static HttpURLConnection applyConsumerCredentials(HttpURLConnection request, boolean isAuthenticationCall ) {
+	private static HttpURLConnection applyConsumerCredentials(
+			HttpURLConnection request,
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken
+	) {
 
-		//If this is the first OAuth authentication call, then we don't have an OAuth Bearer token (access token), so we will use the
+		//If this is the first OAuth authentication call (to oauth/token endpoint),
+		// then we don't have an OAuth Bearer token (access token), so we will use the
 		//Application Key and Application Secret as the consumer credentials for the application.  However, once we've successfully
 		//connected to the api gateway for the first time, we will receive an OAuth access token (Bearer token), you will
 		//need to manage that bearer token and use it for subsequent calls to the API gateway.
 
+		String appKey = ConfigurationHelper.getApplicationKey();
 		if( isAuthenticationCall ) {
-			
-			String encoded = Base64.encode( (ConfigurationHelper.getApplicationKey() + ":" + ConfigurationHelper.getApplicationSecret()).getBytes() );
-			
-			System.out.println( "[Header] Authorization: Basic " + encoded + "\n" 
-			                   + "\t\t(Base64 encoded combination of App key and App secret)\n" 
-			                   + "\t\t" + ConfigurationHelper.getApplicationKey() + ":" + ConfigurationHelper.getApplicationSecret());
-			System.out.println( "[Header] Sync-App-Token: " + ConfigurationHelper.getSyncplicityAdminKey() );
+			String appSecret = ConfigurationHelper.getApplicationSecret();
+
+			String encoded = Base64.encode((appKey + ":" + appSecret).getBytes());
+			System.out.println("[Header] Authorization: Basic " + encoded + "\n"
+					+ "\t\t(Base64 encoded combination of App key and App secret)\n"
+					+ "\t\t" + appKey + ":" + appSecret);
 			request.addRequestProperty("Authorization", "Basic " + encoded);
-			request.setRequestProperty("Sync-App-Token", ConfigurationHelper.getSyncplicityAdminKey()  );
+
+			if (isMachineAuthCall) {
+				// handling the call to oauth/token for obtaining Machine access token for SVA case
+				String machineToken = ConfigurationHelper.getMachineToken();
+
+				System.out.println("[Header] Sync-Machine-Token: " + machineToken);
+				request.setRequestProperty("Sync-Machine-Token", machineToken);
+			} else {
+				// regular call to oauth/token for obtaining user access token for most of the cases
+				String userToken = ConfigurationHelper.getSyncplicityAdminKey();
+
+				System.out.println("[Header] Sync-App-Token: " + userToken);
+				request.setRequestProperty("Sync-App-Token", userToken);
+			}
 		}
 		else {
-			System.out.println( "[Header] AppKey: " +  ConfigurationHelper.getApplicationKey() );
-			System.out.println( "[Header] Authorization: Bearer " +  APIContext.getAccessToken() );
-			request.setRequestProperty("AppKey", ConfigurationHelper.getApplicationKey());
-			request.setRequestProperty("Authorization", "Bearer " + APIContext.getAccessToken() );
+			System.out.println( "[Header] AppKey: " + appKey);
+			request.setRequestProperty("AppKey", appKey);
+
+			String accessToken = useMachineAccessTokenInsteadOfUserAccessToken ?
+					APIContext.getMachineAccessToken() :
+					APIContext.getAccessToken();
+			System.out.println( "[Header] Authorization: Bearer " + accessToken);
+			request.setRequestProperty("Authorization", "Bearer " + accessToken);
 		}
 
 		return request;
@@ -229,7 +312,46 @@ public abstract class APIGateway {
 	protected static <T> T httpGet(String uri, Class<T> classType) {
 		return httpGet( uri, classType, false );
 	}
-	
+
+	/**
+	 * Create GET HTTP request to url and return deserialized object of type
+	 * type.
+	 *
+	 * @param uri             The request url.
+	 * @param classType      The type of returned object.
+	 * @param suppressErrors boolean to determine if output should be print to console on errors
+	 *
+	 * @return The object representation of received response or null if
+	 *         response is empty.
+	 */
+	protected static <T> T httpGet(String uri, Class<T> classType, boolean suppressErrors) {
+		return httpGet(uri, null, classType, suppressErrors);
+	}
+
+	/**
+	 * Create GET HTTP request to url and return deserialized object of type
+	 * type.
+	 *
+	 * @param uri             The request url.
+	 * @param classType      The type of returned object.
+	 * @param suppressErrors boolean to determine if output should be print to console on errors
+	 *
+	 * @return The object representation of received response or null if
+	 *         response is empty.
+	 */
+	protected static <T> T httpGet(
+            String uri,
+            Map<String, String> additionalHeaders,
+            Class<T> classType,
+            boolean suppressErrors) {
+		return httpGet(
+				uri,
+				additionalHeaders,
+				classType,
+				suppressErrors,
+				false);
+	}
+
 	/**
 	 * Create GET HTTP request to url and return deserialized object of type
 	 * type.
@@ -241,14 +363,25 @@ public abstract class APIGateway {
 	 * @return The object representation of received response or null if
 	 *         response is empty.
 	 */
-	protected static <T> T httpGet(String uri, Class<T> classType, boolean suppressErrors ) {
+	protected static <T> T httpGet(
+			String uri,
+			Map<String, String> additionalHeaders,
+			Class<T> classType,
+			boolean suppressErrors,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken) {
 		HttpURLConnection request;
 		String method = "GET";
 		try {
-			request = createRequest(method, uri, false);
+			request = createRequest(
+					method,
+					uri,
+					additionalHeaders,
+					false,
+					false,
+					useMachineAccessTokenInsteadOfUserAccessToken);
 		} catch (IOException e) {
 			e.printStackTrace();
-			
+
 			return null;
 		}
 
@@ -274,7 +407,7 @@ public abstract class APIGateway {
             System.out.println("Authentication was successful. Trying to send GET request again for the last time.");
 
             try {
-    			request = createRequest(method, uri, false);
+    			request = createRequest(method, uri, null, false, false);
     		} catch (IOException e) {
     			e.printStackTrace();
     			
@@ -289,6 +422,40 @@ public abstract class APIGateway {
 	/**
 	 * Create POST HTTP request to url with body and return deserialized object
 	 * of type classType.
+	 *
+	 *
+ * @param isAuthenticationCall
+ * @param isMachineAuthCall
+ * @param uri       The request url.
+	 * @param contentType
+ * @param body      The request body.
+	 * @param classType The type of returned object.
+		 *
+		 * @return The object representation of received response or null if
+	 *         response is empty.
+	 */
+	protected static <T> T httpPost(
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			String uri,
+			String contentType,
+			String body,
+			Class<T> classType
+	) {
+		return httpPost(
+				isAuthenticationCall,
+				isMachineAuthCall,
+				false,
+				uri,
+				contentType,
+				body,
+				null,
+				classType);
+	}
+
+	/**
+	 * Create POST HTTP request to url with body and return deserialized object
+	 * of type classType.
 	 * 
 	 * @param uri       The request url.
 	 * @param body      The request body.
@@ -297,11 +464,26 @@ public abstract class APIGateway {
 	 * @return The object representation of received response or null if
 	 *         response is empty.
 	 */
-	protected static <T> T httpPost(boolean isAuthenticationCall, String uri, String contentType, String body, Class<T> classType) {
+	protected static <T> T httpPost(
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken,
+			String uri,
+			String contentType,
+			String body,
+			Map<String, String> additionalHeaders,
+			Class<T> classType
+	) {
 		HttpURLConnection request;
 		String method = "POST";
 		try {
-			request = createRequest(method, uri, isAuthenticationCall );
+			request = createRequest(
+					method,
+					uri,
+					additionalHeaders,
+					isAuthenticationCall,
+					isMachineAuthCall,
+					useMachineAccessTokenInsteadOfUserAccessToken );
 			request.setRequestProperty("Content-Type", contentType );
 
 			writeBody(request, body, contentType);
@@ -332,7 +514,7 @@ public abstract class APIGateway {
             System.out.println("Authentication was successful. Trying to send POST request again for the last time.");
             
             try {
-            	request = createRequest(method, uri, false);
+            	request = createRequest(method, uri, additionalHeaders, false, false);
     			request.setRequestProperty("Content-Type", contentType );
 
     			writeBody(request, body, contentType);
@@ -360,7 +542,14 @@ public abstract class APIGateway {
 	@SuppressWarnings("unchecked")
 	protected static <T> T httpPost(String uri, String contentType, T entity ) {
 		
-		return httpPost(false, uri, contentType, JSONSerialization.serialize(entity), (Class<T>) entity.getClass());
+		return httpPost(
+				false,
+				false,
+				uri,
+				contentType,
+				JSONSerialization.serialize(entity),
+				(Class<T>) entity.getClass()
+		);
 	}
 
 	/**
@@ -378,7 +567,7 @@ public abstract class APIGateway {
 		HttpURLConnection request;
 		String method = "PUT";
 		try {
-			request = createRequest(method, uri, false);
+			request = createRequest(method, uri, null, false, false);
 			request.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
 
 			writeBody(request, body, JSON_CONTENT_TYPE);
@@ -410,7 +599,7 @@ public abstract class APIGateway {
             System.out.println("Authentication was successful. Trying to send PUT request again for the last time.");
             
             try {
-            	request = createRequest(method, uri, false);
+            	request = createRequest(method, uri, null, false, false);
             	request.setRequestProperty("Content-Type", JSON_CONTENT_TYPE);
 
             	writeBody(request, body, JSON_CONTENT_TYPE);
@@ -456,7 +645,7 @@ public abstract class APIGateway {
 		HttpURLConnection request;
 		String method = "DELETE";
 		try {
-			request = createRequest(method, uri, false);
+			request = createRequest(method, uri, null, false, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -484,7 +673,7 @@ public abstract class APIGateway {
             System.out.println("Authentication was successful. Trying to send DELETE request again for the last time.");
             
             try {
-            	request = createRequest(method, uri, false);
+            	request = createRequest(method, uri, null, false, false);
     		} catch (IOException e) {
     			
     			e.printStackTrace();  			

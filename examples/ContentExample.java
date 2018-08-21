@@ -13,6 +13,8 @@ import services.LinkService;
 import services.StorageEndpointService;
 import services.SyncPointService;
 
+import java.util.Arrays;
+
 /**
  * Provides Syncplicity Content API usage samples.
  */
@@ -74,6 +76,11 @@ public class ContentExample {
             System.err.println("Cannot create a syncpoint as the user does not have storage endpoints.");
             return;
         }
+        StorageEndpoint defaultStorageEndpoint = Arrays.stream(storageEndpoints)
+                .filter(se -> se.Default && se.Active)
+                .findFirst()
+                .orElse(storageEndpoints[0]);
+
         SyncPoint syncPoint = new SyncPoint();
         syncPoint.Type = SyncPointType.Custom;
         syncPoint.Name = "NewSyncPoint";
@@ -81,11 +88,11 @@ public class ContentExample {
         syncPoint.DownloadEnabled = true;
         syncPoint.UploadEnabled = true;
         syncPoint.Path = "";
-        syncPoint.StorageEndpointId = storageEndpoints[0].Id;
-        SyncPoint[] syncpPoints = { syncPoint };
-        SyncPoint[] createdSyncPoints = SyncPointService.createSyncPoints(syncpPoints);
+        syncPoint.StorageEndpointId = defaultStorageEndpoint.Id;
+        SyncPoint[] syncPoints = { syncPoint };
+        SyncPoint[] createdSyncPoints = SyncPointService.createSyncPoints(syncPoints);
         if (createdSyncPoints == null || createdSyncPoints.length == 0) {
-            System.err.println("An error occured during SyncPoint creation.");
+            System.err.println("An error occurred during SyncPoint creation.");
             return;
         }
         createdSyncPoint = createdSyncPoints[0];

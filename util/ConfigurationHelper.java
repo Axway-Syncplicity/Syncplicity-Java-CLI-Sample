@@ -95,6 +95,35 @@ public class ConfigurationHelper {
 	}
 
 	/**
+	 * The Storage Token is needed to run the content sample against an SVA-protected Storage Vault.
+	 * To obtain the token, follow the 'Setup Procedure' from https://developer.syncplicity.com/content-migration-guide
+	 */
+	public static String getStorageToken() {
+		return getPropertyValueWithoutPlaceholder("storageToken", "<Storage Token>", "");
+	}
+
+	/**
+	 * The Machine Token is needed to run the content sample against an SVA-protected Storage Vault.
+	 * To obtain the token, follow the 'Setup Procedure' from https://developer.syncplicity.com/content-migration-guide
+	 */
+	public static String getMachineToken() {
+		return getPropertyValueWithoutPlaceholder("machineToken", "<Machine Token>", "");
+	}
+
+	/**
+	 * The Machine Id is needed to run the content sample against an SVA-protected Storage Vault.
+	 * To obtain the token, follow the 'Setup Procedure' from https://developer.syncplicity.com/content-migration-guide
+	 */
+	public static String getMachineId() {
+		return getPropertyValueWithoutPlaceholder("machineId", "<Machine Id>", "");
+	}
+
+	public static boolean isMachineTokenAuthenticationEnabledForStorageVaults() {
+		String machineToken = getMachineToken();
+		return machineToken != null && !machineToken.isEmpty();
+	}
+
+	/**
 	 * The method retrieves a property value ensuring that placeholder values are removed.
 	 * Placeholder values are values that we commit to the repo in config.properties file.
 	 * @param key Property key

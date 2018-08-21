@@ -11,8 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -56,8 +55,8 @@ public class FileService extends APIGateway {
     static {
         filesUrl = ConfigurationHelper.getBaseApiEndpointUrl() + "sync/file.svc/%s/file/%s";
         fileUrl = ConfigurationHelper.getBaseApiEndpointUrl() + "sync/file.svc/%s/file/%s";
-        uploadFileUrl = "%s/saveFile.php?filepath=%s";
-        downloadUrl = "%s/retrieveFile.php?vToken=%s&sessionKey=%s";
+        uploadFileUrl = "%s/v2/mime/files?filepath=%s";
+        downloadUrl = "%s/v2/files?syncpoint_id=%s&file_version_id=%s";
     }
 
     /**
@@ -90,15 +89,22 @@ public class FileService extends APIGateway {
         File file = getFile(syncPointId, fileId, true);
         SyncPoint syncPoint = SyncPointService.getSyncPoint(syncPointId, suppressErrors);
         StorageEndpoint storageEndpoint = getStorageEndpoint(syncPoint.StorageEndpointId);
-        String bearerToken = "Bearer " + APIContext.getAccessToken();
-        try {
-            bearerToken = URLEncoder.encode(bearerToken, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            System.err.println("Could not encode Bearer token.");
+
+        String url = String.format(downloadUrl, storageEndpoint.Urls[0].Url, syncPointId, file.LatestVersionId);
+
+        Map<String, String> additionalHeaders = new HashMap<>();
+        boolean useMachineAccessTokenInsteadOfUserAccessToken = false;
+        if(ConfigurationHelper.isMachineTokenAuthenticationEnabledForStorageVaults()) {
+            additionalHeaders.put("Syncplicity-Storage-Authorization", ConfigurationHelper.getStorageToken());
+            useMachineAccessTokenInsteadOfUserAccessToken = true;
         }
-        String vToken = syncPointId + "-" + file.LatestVersionId;
-        String url = String.format(downloadUrl, storageEndpoint.Urls[0].Url, vToken, bearerToken);
-        return httpGet(url, String.class, false);
+
+        return httpGet(
+                url,
+                additionalHeaders,
+                String.class,
+                false,
+                useMachineAccessTokenInsteadOfUserAccessToken);
     }
 
     /**
@@ -150,7 +156,22 @@ public class FileService extends APIGateway {
 
         String multipartBody = createMultipartBody(filename, data, sha256, sessionKey, syncPointId, creationTimeUtc);
 
-        return httpPost(false, url, contentType, multipartBody, String.class);
+        Map<String, String> additionalHeaders = new HashMap<>();
+        boolean useMachineAccessTokenInsteadOfUserAccessToken = false;
+        if(ConfigurationHelper.isMachineTokenAuthenticationEnabledForStorageVaults()) {
+            additionalHeaders.put("Syncplicity-Storage-Authorization", ConfigurationHelper.getStorageToken());
+            useMachineAccessTokenInsteadOfUserAccessToken = true;
+        }
+
+        return httpPost(
+                false,
+                false,
+                useMachineAccessTokenInsteadOfUserAccessToken,
+                url,
+                contentType,
+                multipartBody,
+                additionalHeaders,
+                String.class);
     }
 
     /**
