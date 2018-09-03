@@ -79,16 +79,17 @@ public class ConfigurationHelper {
 	/**
 	 * Returns the syncplicity admin key.
 	 * The Syncplicity admin key is configured per user in the Syncplicity admin console.
-	 * The key allows this application to behave on behalf of that user only.
+	 * The key allows this application to authenticate as the token owner.
 	 */
 	public static String getSyncplicityAdminKey() {
 		return getPropertyValueWithoutPlaceholder("syncplicityAdminToken", "<Admin Token>", "");
 	}
 
 	/**
-	 * The owner email should be set to the email created during the initial login to the developer portal.
-	 * For example, if you initiated the login to the developer portal as foo.bar@baz.com,
-	 * then we instantiated a sandbox account with foo.bar-apidev@baz.com as the owner email.
+	 * The ownerEmail should be set to the email of a Company user.
+	 * This email is used to determine the Privacy Region (ROL) of the Company.
+	 * Therefore, you can use the email of the admin token owner,
+	 * or the email of another user in the company.
 	 */
 	public static String getOwnerEmail() {
 		return getPropertyValueWithoutPlaceholder("ownerEmail", "<Owner Email>", "");

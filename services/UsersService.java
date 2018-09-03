@@ -4,7 +4,7 @@ import util.APIGateway;
 import entities.User;
 
 /**
- * Class for requests to users.svc, users_public.svc and user.svc
+ * Class for requests to users.svc and user.svc
  */
 public class UsersService 
 	extends APIGateway {
@@ -19,11 +19,8 @@ public class UsersService
 	 */
 	private static String userUrl;
 
-	private static String usersPublicUrl;
-	
 	static {
 		usersUrl = provisioningAPIUrlPrefix + "users.svc/";
-		usersPublicUrl = provisioningAPIUrlPrefix + "users_public.svc/";
 		userUrl = provisioningAPIUrlPrefix + "user.svc/%s";
 	}
 	/**

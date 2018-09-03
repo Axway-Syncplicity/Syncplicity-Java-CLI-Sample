@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.Map;
 
 import oauth.OAuth;
@@ -18,7 +19,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 public abstract class APIGateway {
 	
@@ -127,25 +127,6 @@ public abstract class APIGateway {
 
 	/**
 	 * Applies the application key and secret to the request
-	 *
-	 * @param request The request object.
-	 *
-	 * @return The current request.
-	 */
-	private static HttpURLConnection applyConsumerCredentials(
-            HttpURLConnection request,
-            boolean isAuthenticationCall,
-            boolean isMachineAuthCall
-    ) {
-		return applyConsumerCredentials(
-				request,
-				isAuthenticationCall,
-				isMachineAuthCall,
-				false);
-	}
-
-	/**
-	 * Applies the application key and secret to the request
 	 * 
 	 * @param request The request object.
 	 * 
@@ -168,7 +149,7 @@ public abstract class APIGateway {
 		if( isAuthenticationCall ) {
 			String appSecret = ConfigurationHelper.getApplicationSecret();
 
-			String encoded = Base64.encode((appKey + ":" + appSecret).getBytes());
+			String encoded = Base64.getEncoder().encodeToString((appKey + ":" + appSecret).getBytes());
 			System.out.println("[Header] Authorization: Basic " + encoded + "\n"
 					+ "\t\t(Base64 encoded combination of App key and App secret)\n"
 					+ "\t\t" + appKey + ":" + appSecret);

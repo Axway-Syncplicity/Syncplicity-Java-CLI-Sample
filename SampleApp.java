@@ -91,6 +91,7 @@ public class SampleApp {
 	// Do NOT reproduce this code in a production project.
 	// Disabling SSL certificate validation makes code vulnerable to man-in-the-middle attacks,
 	// which ultimately make SSL pointless.
+	@SuppressWarnings("unused") // keep this method as an option to make the sample run through Fiddler or other HTTP proxy
 	private static void unsafeDisableSslVerification() {
 		try {
 			// Create a trust manager that does not validate certificate chains
