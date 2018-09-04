@@ -13,8 +13,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.xml.bind.DatatypeConverter;
-
 import entities.File;
 import entities.StorageEndpoint;
 import entities.SyncPoint;
@@ -240,10 +238,21 @@ public class FileService extends APIGateway {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return DatatypeConverter.printHexBinary(digest.digest(data));
+        
+        final byte[] sha256 = digest.digest(data);
+		return convertToHexString(sha256);
     }
 
-    /**
+    private static String convertToHexString(byte[] sha256) {
+    	StringBuilder hexBuilder = new StringBuilder();
+    	for(byte b: sha256) {
+    		hexBuilder.append(String.format("%02x", b));
+    	}
+    	
+    	return hexBuilder.toString();
+	}
+
+	/**
      * Generates a current date time string in ISO 8601 format.
      * 
      * @return the current date time string
