@@ -209,7 +209,7 @@ public class FileService extends APIGateway {
             addFormField(out, "creationTimeUtc", creationTimeUtc);
             addFormField(out, "lastWriteTimeUtc", creationTimeUtc);
             addFormField(out, "fileDone", null);
-            out.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF);
+            out.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF + CRLF);
             out.flush();
             out.close();
         } catch (IOException e) {
