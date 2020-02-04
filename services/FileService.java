@@ -208,7 +208,7 @@ public class FileService extends APIGateway {
             addFormField(out, "virtualFolderId", String.valueOf(syncPointId));
             addFormField(out, "creationTimeUtc", creationTimeUtc);
             addFormField(out, "lastWriteTimeUtc", creationTimeUtc);
-            addFormField(out, "fileDone", null);
+            addFormField(out, "fileDone", "");
             out.writeBytes(TWO_HYPHENS + BOUNDARY + TWO_HYPHENS + CRLF + CRLF);
             out.flush();
             out.close();
@@ -278,10 +278,9 @@ public class FileService extends APIGateway {
     private static void addFormField(DataOutputStream out, String name, String value) throws IOException {
         out.writeBytes(TWO_HYPHENS + BOUNDARY + CRLF);
         out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + CRLF);
-        if (value != null) {
-            out.writeBytes(CRLF);
-            out.writeBytes(value + CRLF);
-        }
+        if (value == null)  value = "";
+        out.writeBytes(CRLF);
+        out.writeBytes(value + CRLF);
         out.flush();
     }
 }
