@@ -278,10 +278,11 @@ public class FileService extends APIGateway {
     private static void addFormField(DataOutputStream out, String name, String value) throws IOException {
         out.writeBytes(TWO_HYPHENS + BOUNDARY + CRLF);
         out.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + CRLF);
+        out.writeBytes(CRLF);
         if (value != null) {
-            out.writeBytes(CRLF);
-            out.writeBytes(value + CRLF);
+            out.writeBytes(value);
         }
+        out.writeBytes(CRLF);
         out.flush();
     }
 }
