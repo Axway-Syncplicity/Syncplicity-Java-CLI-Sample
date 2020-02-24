@@ -126,6 +126,23 @@ public abstract class APIGateway {
 	}
 
 	/**
+	 * Writes the body to the request.
+	 *
+	 * @param request The request object.
+	 * @param body The string representation of body.
+	 */
+	private static void writeBody(HttpURLConnection request, byte[] body, String contentType)
+			throws IOException {
+		System.out.println( "[Body] " + body);
+
+		OutputStream requestStream = request.getOutputStream();
+
+		requestStream.write(body);
+		requestStream.flush();
+		requestStream.close();
+	}
+
+	/**
 	 * Applies the application key and secret to the request
 	 * 
 	 * @param request The request object.
@@ -507,6 +524,82 @@ public abstract class APIGateway {
             response = readResponse(request, classType, false);
         }
         		
+		return response;
+	}
+
+	/**
+	 * Create POST HTTP request to url with body and return deserialized object
+	 * of type classType.
+	 *
+	 * @param uri       The request url.
+	 * @param body      The request body as byte[]
+	 * @param classType The type of returned object.
+	 *
+	 * @return The object representation of received response or null if
+	 *         response is empty.
+	 */
+	protected static <T> T httpPost(
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken,
+			String uri,
+			String contentType,
+			byte[] body,
+			Map<String, String> additionalHeaders,
+			Class<T> classType
+	) {
+		HttpURLConnection request;
+		String method = "POST";
+		try {
+			request = createRequest(
+					method,
+					uri,
+					additionalHeaders,
+					isAuthenticationCall,
+					isMachineAuthCall,
+					useMachineAccessTokenInsteadOfUserAccessToken );
+			request.setRequestProperty("Content-Type", contentType );
+
+			writeBody(request, body, contentType);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		BooleanResult shouldRefreshToken = new BooleanResult();
+		T response = readResponse(request, classType, false, shouldRefreshToken);
+
+		if (!isAuthenticationCall && shouldRefreshToken.getResult())
+		{
+			System.out.println();
+			System.out.println("Trying to re-authenticate using the same credentials.");
+
+			// it's needed to authorize again
+			// trying to do it and then re-send the initial request
+			OAuth.refreshToken();
+
+			System.out.println();
+			if (!APIContext.isAuthenticated())
+			{
+				System.out.println("The OAuth authentication has failed, POST request can't be performed.");
+				return null;
+			}
+
+			System.out.println("Authentication was successful. Trying to send POST request again for the last time.");
+
+			try {
+				request = createRequest(method, uri, additionalHeaders, false, false);
+				request.setRequestProperty("Content-Type", contentType );
+
+				writeBody(request, body, contentType);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			response = readResponse(request, classType, false);
+		}
+
 		return response;
 	}
 

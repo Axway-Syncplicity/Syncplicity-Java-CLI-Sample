@@ -152,7 +152,7 @@ public class FileService extends APIGateway {
         String sessionKey = "Bearer " + APIContext.getAccessToken();
         String creationTimeUtc = getDateTimeUtc();
 
-        String multipartBody = createMultipartBody(filename, data, sha256, sessionKey, syncPointId, creationTimeUtc);
+        byte[] multipartBody = createMultipartBody(filename, data, sha256, sessionKey, syncPointId, creationTimeUtc);
 
         Map<String, String> additionalHeaders = new HashMap<>();
         boolean useMachineAccessTokenInsteadOfUserAccessToken = false;
@@ -189,7 +189,7 @@ public class FileService extends APIGateway {
      *            the file creation date time in ISO 8601 format
      * @return the multipart request body as a string
      */
-    private static String createMultipartBody(String filename, byte[] data, String sha256, String sessionKey,
+    private static byte[] createMultipartBody(String filename, byte[] data, String sha256, String sessionKey,
     		long syncPointId, String creationTimeUtc) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);
@@ -215,7 +215,7 @@ public class FileService extends APIGateway {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String multipartBody = baos.toString();
+        byte[] multipartBody = baos.toByteArray();
         try {
             baos.close();
         } catch (IOException e) {

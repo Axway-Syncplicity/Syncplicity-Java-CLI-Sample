@@ -7,12 +7,17 @@ import entities.Link;
 import entities.StorageEndpoint;
 import entities.SyncPoint;
 import entities.SyncPointType;
+import org.apache.commons.lang.StringUtils;
 import services.FileService;
 import services.FolderService;
 import services.LinkService;
 import services.StorageEndpointService;
 import services.SyncPointService;
+import util.ConfigurationHelper;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -166,10 +171,24 @@ public class ContentExample {
             }
         }
         System.out.println(String.format("Using storage endpoint %s - %s", storageEndpoint.Id, storageEndpoint.Name));
-        byte[] fileBody = "file body".getBytes();
-        String result = FileService.uploadFile(storageEndpoint.Urls[0].Url, folder.VirtualPath, "newFile.txt",
-                folder.SyncpointId, fileBody);
-        System.out.println(String.format("Finished File upload. File upload result: %s", result));
+
+        try {
+            byte[] fileBody = "file body".getBytes();
+            String fileName = "newFile.txt";
+
+                        String path = ConfigurationHelper.getUploadFilePath();
+            if (StringUtils.isNotEmpty(path)) {
+                fileBody = Files.readAllBytes(Paths.get(path));
+                fileName = new java.io.File(path).getName();
+            }
+
+            String result = FileService.uploadFile(storageEndpoint.Urls[0].Url, folder.VirtualPath, fileName,
+                    folder.SyncpointId, fileBody);
+            System.out.println(String.format("Finished File upload. File upload result: %s", result));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getFile() {
