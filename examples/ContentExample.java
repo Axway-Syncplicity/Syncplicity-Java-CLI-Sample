@@ -7,12 +7,17 @@ import entities.Link;
 import entities.StorageEndpoint;
 import entities.SyncPoint;
 import entities.SyncPointType;
+import org.apache.commons.lang.StringUtils;
 import services.FileService;
 import services.FolderService;
 import services.LinkService;
 import services.StorageEndpointService;
 import services.SyncPointService;
+import util.ConfigurationHelper;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -156,6 +161,7 @@ public class ContentExample {
             System.err.println("The syncpoint was not created at previous steps. No File will be uploaded.");
             return;
         }
+
         Folder folder = FolderService.getFolder(createdSyncPoint.Id, createdSyncPoint.RootFolderId, true);
         String storageEnpointId = createdSyncPoint.StorageEndpointId;
         StorageEndpoint[] storageEndpoints = StorageEndpointService.getStorageEndpoints(true);
@@ -165,11 +171,29 @@ public class ContentExample {
                 storageEndpoint = endpoint;
             }
         }
-        System.out.println(String.format("Using storage endpoint %s - %s", storageEndpoint.Id, storageEndpoint.Name));
-        byte[] fileBody = "file body".getBytes();
-        String result = FileService.uploadFile(storageEndpoint.Urls[0].Url, folder.VirtualPath, "newFile.txt",
-                folder.SyncpointId, fileBody);
-        System.out.println(String.format("Finished File upload. File upload result: %s", result));
+
+        if (storageEndpoint == null) {
+            System.err.printf("Cannot find storage endpoint with id %s. No file will be uploaded.%n", storageEnpointId);
+            return;
+        }
+
+        System.out.printf("Using storage endpoint %s - %s%n", storageEndpoint.Id, storageEndpoint.Name);
+        try {
+            byte[] fileBody = "file body".getBytes();
+            String fileName = "newFile.txt";
+
+            String path = ConfigurationHelper.getUploadFilePath();
+            if (StringUtils.isNotEmpty(path)) {
+                fileBody = Files.readAllBytes(Paths.get(path));
+                fileName = new java.io.File(path).getName();
+            }
+
+            String result = FileService.uploadFile(storageEndpoint.Urls[0].Url, folder.VirtualPath, fileName,
+                                                   folder.SyncpointId, fileBody);
+            System.out.printf("Finished File upload. File upload result: %s%n", result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getFile() {

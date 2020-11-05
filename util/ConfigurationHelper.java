@@ -119,6 +119,13 @@ public class ConfigurationHelper {
 		return getPropertyValueWithoutPlaceholder("machineId", "<Machine Id>", "");
 	}
 
+	/**
+	 * Path to file to be used while uploading for ContentExample. If not set string of sample data will be used.
+	 */
+	public static String getUploadFilePath() {
+		return getPropertyValueWithoutPlaceholder("uploadFilePath", "<Upload File Path>", "");
+	}
+
 	public static boolean isMachineTokenAuthenticationEnabledForStorageVaults() {
 		String machineToken = getMachineToken();
 		return machineToken != null && !machineToken.isEmpty();

@@ -1,5 +1,12 @@
 package services;
 
+import entities.File;
+import entities.StorageEndpoint;
+import entities.SyncPoint;
+import util.APIContext;
+import util.APIGateway;
+import util.ConfigurationHelper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,14 +18,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import entities.File;
-import entities.StorageEndpoint;
-import entities.SyncPoint;
-import util.APIContext;
-import util.APIGateway;
-import util.ConfigurationHelper;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * A service for retrieving File data.
@@ -124,7 +127,7 @@ public class FileService extends APIGateway {
 
     /**
      * Uploads a file.
-     * 
+     *
      * @param storageEndpointUrl
      *            the Storage Endpoint ID
      * @param filePath
@@ -137,8 +140,11 @@ public class FileService extends APIGateway {
      *            the file data as byte array
      * @return the upload result as a string
      */
-    public static String uploadFile(String storageEndpointUrl, String filePath, String filename, long syncPointId,
-            byte[] data) {
+    public static String uploadFile(String storageEndpointUrl,
+                                    String filePath,
+                                    String filename,
+                                    long syncPointId,
+                                    byte[] data) {
         filePath += filename;
         try {
             filePath = URLEncoder.encode(filePath, StandardCharsets.UTF_8.toString());
@@ -152,7 +158,7 @@ public class FileService extends APIGateway {
         String sessionKey = "Bearer " + APIContext.getAccessToken();
         String creationTimeUtc = getDateTimeUtc();
 
-        String multipartBody = createMultipartBody(filename, data, sha256, sessionKey, syncPointId, creationTimeUtc);
+        byte[] multipartBody = createMultipartBody(filename, data, sha256, sessionKey, syncPointId, creationTimeUtc);
 
         Map<String, String> additionalHeaders = new HashMap<>();
         boolean useMachineAccessTokenInsteadOfUserAccessToken = false;
@@ -189,7 +195,7 @@ public class FileService extends APIGateway {
      *            the file creation date time in ISO 8601 format
      * @return the multipart request body as a string
      */
-    private static String createMultipartBody(String filename, byte[] data, String sha256, String sessionKey,
+    private static byte[] createMultipartBody(String filename, byte[] data, String sha256, String sessionKey,
     		long syncPointId, String creationTimeUtc) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);
@@ -215,7 +221,7 @@ public class FileService extends APIGateway {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String multipartBody = baos.toString();
+        byte[] multipartBody = baos.toByteArray();
         try {
             baos.close();
         } catch (IOException e) {

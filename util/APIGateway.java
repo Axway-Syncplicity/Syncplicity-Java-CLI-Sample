@@ -1,5 +1,12 @@
 package util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import oauth.OAuth;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,15 +17,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
-
-import oauth.OAuth;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 public abstract class APIGateway {
 	
@@ -121,6 +119,23 @@ public abstract class APIGateway {
 		OutputStream requestStream = request.getOutputStream();
 
 		requestStream.write(body.getBytes(Charset.forName("UTF-8")));
+		requestStream.flush();
+		requestStream.close();
+	}
+
+	/**
+	 * Writes the body to the request.
+	 *
+	 * @param request The request object.
+	 * @param body The string representation of body.
+	 */
+	private static void writeBody(HttpURLConnection request, byte[] body, String contentType)
+			throws IOException {
+		System.out.println( "[Body] " + body);
+
+		OutputStream requestStream = request.getOutputStream();
+
+		requestStream.write(body);
 		requestStream.flush();
 		requestStream.close();
 	}
@@ -507,6 +522,80 @@ public abstract class APIGateway {
             response = readResponse(request, classType, false);
         }
         		
+		return response;
+	}
+
+	/**
+	 * Create POST HTTP request to url with body and return deserialized object
+	 * of type classType.
+	 *
+	 * @param uri       The request url.
+	 * @param body      The request body as byte[]
+	 * @param classType The type of returned object.
+	 *
+	 * @return The object representation of received response or null if
+	 *         response is empty.
+	 */
+	protected static <T> T httpPost(
+			boolean isAuthenticationCall,
+			boolean isMachineAuthCall,
+			boolean useMachineAccessTokenInsteadOfUserAccessToken,
+			String uri,
+			String contentType,
+			byte[] body,
+			Map<String, String> additionalHeaders,
+			Class<T> classType
+	) {
+		HttpURLConnection request;
+		String method = "POST";
+		try {
+			request = createRequest(
+					method,
+					uri,
+					additionalHeaders,
+					isAuthenticationCall,
+					isMachineAuthCall,
+					useMachineAccessTokenInsteadOfUserAccessToken);
+			request.setRequestProperty("Content-Type", contentType);
+
+			writeBody(request, body, contentType);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		BooleanResult shouldRefreshToken = new BooleanResult();
+		T response = readResponse(request, classType, false, shouldRefreshToken);
+
+		if (!isAuthenticationCall && shouldRefreshToken.getResult()) {
+			System.out.println();
+			System.out.println("Trying to re-authenticate using the same credentials.");
+
+			// it's needed to authorize again
+			// trying to do it and then re-send the initial request
+			OAuth.refreshToken();
+
+			System.out.println();
+			if (!APIContext.isAuthenticated()) {
+				System.out.println("The OAuth authentication has failed, POST request can't be performed.");
+				return null;
+			}
+
+			System.out.println("Authentication was successful. Trying to send POST request again for the last time.");
+
+			try {
+				request = createRequest(method, uri, additionalHeaders, false, false);
+				request.setRequestProperty("Content-Type", contentType);
+
+				writeBody(request, body, contentType);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			response = readResponse(request, classType, false);
+		}
+
 		return response;
 	}
 
