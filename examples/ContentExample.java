@@ -53,6 +53,7 @@ public class ContentExample {
         getSyncPoints();
         createSyncPoint();
         createFolder();
+        createNestedFolder();
         getFolder();
         uploadFile();
         getFile();
@@ -132,6 +133,29 @@ public class ContentExample {
         }
         createdFolder = createdFolders[0];
         System.out.println(String.format("Finished Folder creation. New Folder id: %s", createdFolder.FolderId));
+    }
+
+    private static void createNestedFolder() {
+        System.out.println("Starting NestedFolder creation..");
+        if (createdSyncPoint == null) {
+            System.err.println("No SyncPoint was created. No Nested Folder will be created.");
+            return;
+        }
+        if (createdFolder == null) {
+            System.err.println("No NewFolder was created. No Nested Folder will be created.");
+            return;
+        }
+        Folder nestedFolder = new Folder();
+        nestedFolder.Name = "NestedFolder";
+        nestedFolder.Status = FolderStatus.Added;
+        Folder[] folders = { nestedFolder };
+        Folder[] createdFolders = FolderService.createFolders(createdSyncPoint.Id, createdFolder.FolderId,
+                folders);
+        if (createdFolders == null || createdFolders.length == 0) {
+            System.err.println("No folder was created.");
+            return;
+        }
+        System.out.println(String.format("Finished Nested Folder creation. New Nested Folder id: %s", createdFolders[0].FolderId));
     }
 
     private static void getFolder() {
