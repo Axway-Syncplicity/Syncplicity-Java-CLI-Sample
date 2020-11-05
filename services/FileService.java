@@ -1,5 +1,12 @@
 package services;
 
+import entities.File;
+import entities.StorageEndpoint;
+import entities.SyncPoint;
+import util.APIContext;
+import util.APIGateway;
+import util.ConfigurationHelper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,14 +18,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import entities.File;
-import entities.StorageEndpoint;
-import entities.SyncPoint;
-import util.APIContext;
-import util.APIGateway;
-import util.ConfigurationHelper;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * A service for retrieving File data.
@@ -124,7 +127,7 @@ public class FileService extends APIGateway {
 
     /**
      * Uploads a file.
-     * 
+     *
      * @param storageEndpointUrl
      *            the Storage Endpoint ID
      * @param filePath
@@ -137,8 +140,11 @@ public class FileService extends APIGateway {
      *            the file data as byte array
      * @return the upload result as a string
      */
-    public static String uploadFile(String storageEndpointUrl, String filePath, String filename, long syncPointId,
-            byte[] data) {
+    public static String uploadFile(String storageEndpointUrl,
+                                    String filePath,
+                                    String filename,
+                                    long syncPointId,
+                                    byte[] data) {
         filePath += filename;
         try {
             filePath = URLEncoder.encode(filePath, StandardCharsets.UTF_8.toString());

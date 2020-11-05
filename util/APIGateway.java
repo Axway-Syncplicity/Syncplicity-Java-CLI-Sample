@@ -1,5 +1,12 @@
 package util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import oauth.OAuth;
+import org.apache.commons.lang.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,15 +17,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Map;
-
-import oauth.OAuth;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 public abstract class APIGateway {
 	
@@ -557,8 +555,8 @@ public abstract class APIGateway {
 					additionalHeaders,
 					isAuthenticationCall,
 					isMachineAuthCall,
-					useMachineAccessTokenInsteadOfUserAccessToken );
-			request.setRequestProperty("Content-Type", contentType );
+					useMachineAccessTokenInsteadOfUserAccessToken);
+			request.setRequestProperty("Content-Type", contentType);
 
 			writeBody(request, body, contentType);
 		} catch (IOException e) {
@@ -569,8 +567,7 @@ public abstract class APIGateway {
 		BooleanResult shouldRefreshToken = new BooleanResult();
 		T response = readResponse(request, classType, false, shouldRefreshToken);
 
-		if (!isAuthenticationCall && shouldRefreshToken.getResult())
-		{
+		if (!isAuthenticationCall && shouldRefreshToken.getResult()) {
 			System.out.println();
 			System.out.println("Trying to re-authenticate using the same credentials.");
 
@@ -579,8 +576,7 @@ public abstract class APIGateway {
 			OAuth.refreshToken();
 
 			System.out.println();
-			if (!APIContext.isAuthenticated())
-			{
+			if (!APIContext.isAuthenticated()) {
 				System.out.println("The OAuth authentication has failed, POST request can't be performed.");
 				return null;
 			}
@@ -589,7 +585,7 @@ public abstract class APIGateway {
 
 			try {
 				request = createRequest(method, uri, additionalHeaders, false, false);
-				request.setRequestProperty("Content-Type", contentType );
+				request.setRequestProperty("Content-Type", contentType);
 
 				writeBody(request, body, contentType);
 			} catch (IOException e) {
