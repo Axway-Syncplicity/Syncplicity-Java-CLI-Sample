@@ -134,9 +134,11 @@ public class ContentExample {
         System.out.println("Starting NestedFolder creation..");
         if (createdSyncPoint == null) {
             System.err.println("No SyncPoint was created. No Nested Folder will be created.");
+            return;
         }
         if (createdFolder == null) {
             System.err.println("No NewFolder was created. No Nested Folder will be created.");
+            return;
         }
         Folder nestedFolder = new Folder();
         nestedFolder.Name = "NestedFolder";
